@@ -15,13 +15,19 @@ namespace Centipede
         Texture2D[] tex;
         Rectangle loc;
         int damage;
+        bool isDestroyed;
         
         
         public Mushroom(int x,int y)
         {
-            tex = null;
             loc = new Rectangle(x,y,20,20);
             damage = 0;
+            isDestroyed = true;
+        }
+
+        public void activate()
+        {
+            isDestroyed = false;
         }
 
         public void setTex(Texture2D[] t)
