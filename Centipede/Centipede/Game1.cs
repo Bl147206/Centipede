@@ -19,10 +19,15 @@ namespace Centipede
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        Mushroom[][] mushrooms;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            graphics.PreferredBackBufferHeight = 640;
+            graphics.PreferredBackBufferWidth = 600;
+            graphics.ApplyChanges();
         }
 
         /// <summary>
@@ -34,6 +39,7 @@ namespace Centipede
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            mushrooms = new Mushroom[30][30];
 
             base.Initialize();
         }
@@ -48,6 +54,7 @@ namespace Centipede
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+
         }
 
         /// <summary>
