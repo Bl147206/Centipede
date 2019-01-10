@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Centipede", "Centipede\Centipede\Centipede.csproj", "{B606BAD8-B50E-451D-B4BA-0DAE0CAD5E19}"
+EndProject
+Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "CentipedeContent", "Centipede\CentipedeContent\CentipedeContent.contentproj", "{32F83333-B1D2-4C35-8198-304CC1A2340C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B606BAD8-B50E-451D-B4BA-0DAE0CAD5E19}.Debug|x86.ActiveCfg = Debug|x86
+		{B606BAD8-B50E-451D-B4BA-0DAE0CAD5E19}.Debug|x86.Build.0 = Debug|x86
+		{B606BAD8-B50E-451D-B4BA-0DAE0CAD5E19}.Release|x86.ActiveCfg = Release|x86
+		{B606BAD8-B50E-451D-B4BA-0DAE0CAD5E19}.Release|x86.Build.0 = Release|x86
+		{32F83333-B1D2-4C35-8198-304CC1A2340C}.Debug|x86.ActiveCfg = Debug|x86
+		{32F83333-B1D2-4C35-8198-304CC1A2340C}.Release|x86.ActiveCfg = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
