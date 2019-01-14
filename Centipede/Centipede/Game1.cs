@@ -20,6 +20,7 @@ namespace Centipede
         SpriteBatch spriteBatch;
 
         Mushroom[,] mushrooms;
+        int x = 0;
 
         public Game1()
         {
