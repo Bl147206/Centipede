@@ -1,0 +1,76 @@
+﻿using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System.Text;
+
+namespace Centipede
+{
+    class Player
+    {
+
+        //top measured in pixels the ship can travel above the bottum of the screen
+        const int top = 100, rightEdge = 600, bottomEdge = 640;
+
+        int speedY = 3, speedX = 3;
+
+        Texture2D playerTex;
+        Rectangle playerRec;
+
+        public Player(Texture2D playerTex, Rectangle playerRec)
+        {
+            this.playerTex = playerTex;
+            this.playerRec = playerRec;
+        }
+
+        //movement methods
+        public void moveUp()
+        {
+            playerRec.Y -= speedY;
+            bounding();
+        }
+
+        public void moveDown()
+        {
+            playerRec.Y += speedY;
+            bounding();
+        }
+
+        public void moveLeft()
+        {
+            playerRec.X -= speedX;
+            bounding();
+        }
+
+        public void moveRight()
+        {
+            playerRec.X += speedX;
+            bounding();
+        }
+
+        public void bounding()
+        {
+            if (playerRec.X < 0)
+            {
+                playerRec.X = 0;
+            }
+            if (playerRec.X > rightEdge - playerRec.X)
+            {
+                playerRec.X = rightEdge - playerRec.X;
+            }
+            if (playerRec.Y > bottomEdge - playerRec.Height)
+            {
+                playerRec.Y = bottomEdge - playerRec.Height;
+            }
+            if (playerRec.Y < bottomEdge - top)
+            {
+                playerRec.Y = bottomEdge - top;
+            }
+        }
+
+
+    }
+}
+
+
+
