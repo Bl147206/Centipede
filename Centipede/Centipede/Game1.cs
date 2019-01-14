@@ -21,6 +21,7 @@ namespace Centipede
 
         Mushroom[,] mushrooms;
 
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
