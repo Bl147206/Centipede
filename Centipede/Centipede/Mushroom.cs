@@ -8,32 +8,47 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+
 namespace Centipede
 {
     class Mushroom
     {
-        Texture2D[] tex;
+        Texture2D[] texts;
         Rectangle loc;
         int damage;
-        
-        
-        public Mushroom(int x,int y)
+        bool visible;
+
+        public Mushroom(Rectangle l)
         {
-            tex = null;
-            loc = new Rectangle(x,y,20,20);
+            texts = null;
+            loc = l;
             damage = 0;
+            visible = false;
         }
 
         public void setTex(Texture2D[] t)
         {
-            tex = t;
+            texts = t;
+        }
+
+        public void generate()
+        {
+            damage = 0;
+            visible = true;
         }
 
         public void hit()
         {
             damage++;
+            if(damage>2)
+            {
+                visible = false;
+            }
         }
 
-
+        public void draw()
+        {
+            
+        }
     }
 }
