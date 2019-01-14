@@ -19,7 +19,7 @@ namespace Centipede
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        Mushroom[,] mushrooms;
+        Mushroom[,] MushField;
 
         public Game1()
         {
@@ -39,7 +39,15 @@ namespace Centipede
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            mushrooms = new Mushroom[30,30];
+            MushField = new Mushroom[30,30];
+            for(int x=0; x<MushField.Length;x++)
+            {
+                for(int y=0; y<MushField.Length;y++)
+                {
+                    MushField[x, y] = new Mushroom(x * 20, y * 20 + 40);
+                }
+
+            }
 
 
             base.Initialize();
