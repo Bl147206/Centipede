@@ -20,7 +20,7 @@ namespace Centipede
         SpriteBatch spriteBatch;
 
         Mushroom[,] mushrooms;
-
+        LinkedList<Centipede> centipedes;
 
         public Game1()
         {
