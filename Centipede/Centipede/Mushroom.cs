@@ -46,9 +46,9 @@ namespace Centipede
             }
         }
 
-        public void draw()
+        public void draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            
+            spriteBatch.Draw(texts[damage], loc, Color.White);
         }
     }
 }
