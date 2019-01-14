@@ -23,6 +23,28 @@ namespace Centipede
             this.playerRec = playerRec;
         }
 
+        //getters setters
+
+        public Rectangle getRec()
+        {
+            return this.playerRec;
+        }
+
+        public void setRec(Rectangle playerRec)
+        {
+            this.playerRec = playerRec;
+        }
+
+        public Texture2D getTex()
+        {
+            return this.playerTex;
+        }
+
+        public void setTex(Texture2D playerTex)
+        {
+            this.playerTex = playerTex;
+        }
+
         //movement methods
         public void moveUp()
         {
@@ -66,6 +88,13 @@ namespace Centipede
             {
                 playerRec.Y = bottomEdge - top;
             }
+        }
+
+        //draw method
+
+        public void draw(SpriteBatch spriteBatch, GameTime gameTime)
+        {
+            spriteBatch.Draw(playerTex, playerRec, Color.White);
         }
 
 
