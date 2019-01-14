@@ -40,6 +40,13 @@ namespace Centipede
         {
             // TODO: Add your initialization logic here
             mushrooms = new Mushroom[30,30];
+            for(int x=0; x<mushrooms.Length; x++)
+            {
+                for(int y=0; y<mushrooms.Length;y++)
+                {
+                    mushrooms[x, y] = new Mushroom(new Rectangle(x * 20, y * 20 + 40, 20, 20));
+                }
+            }
 
             base.Initialize();
         }
