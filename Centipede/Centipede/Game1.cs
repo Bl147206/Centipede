@@ -120,6 +120,17 @@ namespace Centipede
             if (kb.IsKeyDown(Keys.LeftAlt) && !kbO.IsKeyDown(Keys.LeftAlt))
                 restart();//This is to test what you are working on in multiple levels. (Secret skip button)
 
+
+
+
+
+
+
+
+
+
+
+
             //player movement logic
             if (kb.IsKeyDown(Keys.W))
             {
