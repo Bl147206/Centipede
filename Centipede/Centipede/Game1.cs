@@ -62,8 +62,7 @@ namespace Centipede
                 }
             }
             restart();
-
-            player = new Player(null, new Rectangle(20, 20, 0, 0),
+            player = new Player(null, new Rectangle(0, GraphicsDevice.Viewport.Height - 20, 20, 20),
                 GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
 
             base.Initialize();
@@ -88,8 +87,8 @@ namespace Centipede
                     mushrooms[x, y].setTex(mushTexts);
                 }
             }
-
-            player.setTex(img);
+            
+            player.setTex(Content.Load<Texture2D>("graphicstest"));
 
             // TODO: use this.Content to load your game content here
 
@@ -124,7 +123,19 @@ namespace Centipede
             //player movement logic
             if (kb.IsKeyDown(Keys.W))
             {
-
+                player.moveUp();
+            }
+            if (kb.IsKeyDown(Keys.A))
+            {
+                player.moveLeft();
+            }
+            if (kb.IsKeyDown(Keys.D))
+            {
+                player.moveRight();
+            }
+            if (kb.IsKeyDown(Keys.S))
+            {
+                player.moveDown();
             }
 
             kbO = kb;
@@ -137,8 +148,9 @@ namespace Centipede
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
+            player.draw(spriteBatch, gameTime);
             //for (int x = 0; x < mushrooms.GetLength(0); x++)
             //{
             //    for (int y = 0; y < mushrooms.GetLength(0); y++)
@@ -146,7 +158,6 @@ namespace Centipede
             //        mushrooms[x, y].Draw(spriteBatch, gameTime);
             //    }
             //}
-            player.draw(spriteBatch, gameTime);
             spriteBatch.End();
 
 
