@@ -124,6 +124,21 @@ namespace Centipede
             //player movement logic
             if (kb.IsKeyDown(Keys.W))
             {
+                
+            }
+
+            if (kb.IsKeyDown(Keys.A))
+            {
+
+            }
+
+            if (kb.IsKeyDown(Keys.S))
+            {
+
+            }
+
+            if (kb.IsKeyDown(Keys.D))
+            {
 
             }
 
@@ -209,6 +224,32 @@ namespace Centipede
                 if (check==false)
                 mushrooms[x, y].generate();
             }
+        }
+        public bool[] Collision(Player pc)
+        {
+            Rectangle one = pc.getRec();
+            bool[] check = new bool[4];
+            for (int z = 0; z < check.Length; z++)
+                check[z] = false;
+            for (int x = 0; x < mushrooms.GetLength(0); x++)
+            {
+                for (int y = 0; y < mushrooms.GetLength(0); y++)
+                {
+                    if (mushrooms[x, y].loc.Intersects(one))
+                        if (mushrooms[x, y].loc.X + mushrooms[x, y].loc.Width >= one.X)
+                            check[2] = true;
+                    if (mushrooms[x, y].loc.Intersects(one))
+                        if (mushrooms[x, y].loc.X + mushrooms[x, y].loc.Width >= one.X)
+                            check[2] = true;
+                    if (mushrooms[x, y].loc.Intersects(one))
+                        if (mushrooms[x, y].loc.X + mushrooms[x, y].loc.Width >= one.X)
+                            check[2] = true;
+                    if (mushrooms[x, y].loc.Intersects(one))
+                        if (mushrooms[x, y].loc.X + mushrooms[x, y].loc.Width >= one.X)
+                            check[2] = true;
+                }
+            }
+            return check;
         }
     }
 

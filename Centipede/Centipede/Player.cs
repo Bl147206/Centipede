@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Centipede
 {
-    class Player
+    public class Player
     {
 
         //top measured in pixels the ship can travel above the bottum of the screen
