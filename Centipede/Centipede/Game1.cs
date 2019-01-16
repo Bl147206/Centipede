@@ -122,17 +122,6 @@ namespace Centipede
             if (kb.IsKeyDown(Keys.LeftAlt) && !kbO.IsKeyDown(Keys.LeftAlt))
                 restart();//This is to test what you are working on in multiple levels. (Secret skip button)
 
-
-
-
-
-
-
-
-
-
-
-
             //player movement logic
             if (kb.IsKeyDown(Keys.W))
             {
@@ -164,13 +153,13 @@ namespace Centipede
             GraphicsDevice.Clear(backgroundColor);
             spriteBatch.Begin();
             player.draw(spriteBatch, gameTime);
-            //for (int x = 0; x < mushrooms.GetLength(0); x++)
-            //{
-            //    for (int y = 0; y < mushrooms.GetLength(0); y++)
-            //    {
-            //        mushrooms[x, y].Draw(spriteBatch, gameTime);
-            //    }
-            //}
+            for (int x = 0; x < mushrooms.GetLength(0); x++)
+            {
+                for (int y = 0; y < mushrooms.GetLength(0); y++)
+                {
+                    mushrooms[x, y].Draw(spriteBatch, gameTime);
+                }
+            }
             spriteBatch.End();
 
 
@@ -244,27 +233,11 @@ namespace Centipede
         public bool[] Collision(Player pc)
         {
             Rectangle one = pc.getRec();
-            bool[] check = new bool[4];
+            int indexX;
+            int indexY; 
+            bool[] check = new bool[4];//Boolean Order: Up, Down, Left, Right
             for (int z = 0; z < check.Length; z++)
                 check[z] = false;
-            for (int x = 0; x < mushrooms.GetLength(0); x++)
-            {
-                for (int y = 0; y < mushrooms.GetLength(0); y++)
-                {
-                    if (mushrooms[x, y].loc.Intersects(one)&&mushrooms[x,y].visible)
-                        if (mushrooms[x, y].loc.X + mushrooms[x, y].loc.Width >= one.X)
-                            check[2] = true;
-                    if (mushrooms[x, y].loc.Intersects(one))
-                        if (mushrooms[x, y].loc.X + mushrooms[x, y].loc.Width >= one.X)
-                            check[2] = true;
-                    if (mushrooms[x, y].loc.Intersects(one))
-                        if (mushrooms[x, y].loc.X + mushrooms[x, y].loc.Width >= one.X)
-                            check[2] = true;
-                    if (mushrooms[x, y].loc.Intersects(one))
-                        if (mushrooms[x, y].loc.X + mushrooms[x, y].loc.Width >= one.X)
-                            check[2] = true;
-                }
-            }
             return check;
         }
     }
