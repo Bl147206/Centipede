@@ -38,6 +38,13 @@ namespace Centipede
             }
         }
 
+        public int hit(int segment)
+        {
+            int ret = body.Length - segment;
+
+            return 0;
+        }
+
 
     }
 }
