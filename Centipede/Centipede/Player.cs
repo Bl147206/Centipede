@@ -16,13 +16,19 @@ namespace Centipede
 
         Texture2D playerTex;
         Rectangle playerRec;
+        bool isFiring;
+        Rectangle proj;
+        Texture2D projTex;
 
-        public Player(Texture2D playerTex, Rectangle playerRec, int rightEdge, int bottomEdge)
+        public Player(Texture2D playerTex,Texture2D projTex, Rectangle playerRec, int rightEdge, int bottomEdge)
         {
             this.playerTex = playerTex;
             this.playerRec = playerRec;
             this.rightEdge = rightEdge;
             this.bottomEdge = bottomEdge;
+            isFiring = false;
+            proj = new Rectangle();
+            this.projTex = projTex;
         }
 
         public Player(Texture2D playerTex, Rectangle playerRec)
@@ -99,11 +105,29 @@ namespace Centipede
             }
         }
 
+        public void fire()
+        {
+            if (!isFiring)
+            {
+                proj = new Rectangle(playerRec.X, playerRec.Y, 1, 3);
+                isFiring = true;
+            }
+        }
+
+        public void updateProj()
+        {
+            proj.Y++;
+            if (proj.Y < 0)
+                isFiring = false;
+        }
+
         //draw method
 
         public void draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
             spriteBatch.Draw(playerTex, playerRec, Color.White);
+            if (isFiring)
+                spriteBatch.Draw(projTex, proj, Color.White);
             
         }
 
