@@ -110,8 +110,8 @@ namespace Centipede
                 this.Exit();
             kb=Keyboard.GetState();
             // TODO: Add your update logic here
-            if (kb.IsKeyDown(Keys.W) && !kbO.IsKeyDown(Keys.W))
-                restart();
+            if (kb.IsKeyDown(Keys.LeftAlt) && !kbO.IsKeyDown(Keys.LeftAlt))
+                restart();//This is to test what you are working on in multiple levels. (Secret skip button)
             kbO = kb;
             base.Update(gameTime);
         }
