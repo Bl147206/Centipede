@@ -24,6 +24,8 @@ namespace Centipede
         Texture2D[] mushTexts;
         Texture2D img;//Use this texture if you want to test the visuals. We need to delete this before we submit project.
         Texture2D none;
+        Random rng;
+        public int level;
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -31,6 +33,7 @@ namespace Centipede
             graphics.PreferredBackBufferHeight = 640;
             graphics.PreferredBackBufferWidth = 600;
             graphics.ApplyChanges();
+            IsMouseVisible = true;
         }
 
         /// <summary>
@@ -44,15 +47,17 @@ namespace Centipede
             // TODO: Add your initialization logic here
             mushrooms = new Mushroom[30,30];
             mushTexts = new Texture2D[2];
+            rng = new Random();
+            level = 1;
   
             for(int x=0; x<30; x++)
             {
                 for(int y=0; y<30;y++)
                 {
                     mushrooms[x, y] = new Mushroom(new Rectangle(x * 20, y * 20 + 40, 20, 20));
-                    //Console.Write(mushrooms[x, y].loc.X + "  "+mushrooms[x, y].loc.Y+"  "+x+"  "+y+"\n");
                 }
             }
+            restart();
 
             base.Initialize();
         }
@@ -128,5 +133,32 @@ namespace Centipede
 
             base.Draw(gameTime);
         }
+        public int checkArray(Mushroom[,] z)
+        {
+            int total = 0;
+            for(int x=0; x<z.GetLength(0);x++)
+            {
+                for (int y = 0; y < z.GetLength(0); y++)
+                {
+                    if (z[x, y] == null)
+                        continue;
+                    if (z[x,y].visible == true)
+                        total++;
+                }
+
+            }
+            return total;
+        }
+        public void restart()
+        {
+            while (checkArray(mushrooms) < level * 10)
+            {
+                int x = rng.Next(30);
+                int y = rng.Next(30);
+
+                mushrooms[x, y].generate();
+            }
+        }
     }
+
 }

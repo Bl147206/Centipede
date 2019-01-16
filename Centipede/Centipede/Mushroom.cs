@@ -11,12 +11,12 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Centipede
 {
-    class Mushroom
+    public class Mushroom
     {
         Texture2D[] texts;//First image in array is the texture, second one is blank at the moment
         public Rectangle loc;
         int damage;
-        bool visible;
+        public bool visible;
 
         public Mushroom(Rectangle l)
         {
@@ -48,7 +48,8 @@ namespace Centipede
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            spriteBatch.Draw(texts[damage], loc, Color.White);
+            if(visible == true)
+                spriteBatch.Draw(texts[damage], loc, Color.White);
         }
     }
 }
