@@ -65,7 +65,7 @@ namespace Centipede
             }
             restart();
 
-            player = new Player(null, new Rectangle(20, 20, 0, 0),
+            player = new Player(null, new Rectangle(20, 20, 20, 20),
                 GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
 
             base.Initialize();
