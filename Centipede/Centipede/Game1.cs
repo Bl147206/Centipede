@@ -32,7 +32,7 @@ namespace Centipede
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            graphics.PreferredBackBufferHeight = 640;
+            graphics.PreferredBackBufferHeight = 700;
             graphics.PreferredBackBufferWidth = 600;
             graphics.ApplyChanges();
             IsMouseVisible = true;
