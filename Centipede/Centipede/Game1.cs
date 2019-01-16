@@ -124,25 +124,6 @@ namespace Centipede
                 restart();//This is to test what you are working on in multiple levels. (Secret skip button)
 
             //player movement logic
-            if (kb.IsKeyDown(Keys.W))
-            {
-                
-            }
-
-            if (kb.IsKeyDown(Keys.A))
-            {
-
-            }
-
-            if (kb.IsKeyDown(Keys.S))
-            {
-
-            }
-
-            if (kb.IsKeyDown(Keys.D))
-            {
-
-            }
 
             kbO = kb;
             base.Update(gameTime);
@@ -244,7 +225,7 @@ namespace Centipede
             {
                 for (int y = 0; y < mushrooms.GetLength(0); y++)
                 {
-                    if (mushrooms[x, y].loc.Intersects(one))
+                    if (mushrooms[x, y].loc.Intersects(one)&&mushrooms[x,y].visible)
                         if (mushrooms[x, y].loc.X + mushrooms[x, y].loc.Width >= one.X)
                             check[2] = true;
                     if (mushrooms[x, y].loc.Intersects(one))
