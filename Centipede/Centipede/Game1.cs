@@ -26,6 +26,8 @@ namespace Centipede
         Texture2D none;
         Random rng;
         public int level;
+        KeyboardState kb;
+        KeyboardState kbO;
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -48,11 +50,12 @@ namespace Centipede
             mushrooms = new Mushroom[30,30];
             mushTexts = new Texture2D[2];
             rng = new Random();
-            level = 1;
+            level = 0;
+            kbO = Keyboard.GetState();
   
-            for(int x=0; x<30; x++)
+            for(int x=0; x< mushrooms.GetLength(0); x++)
             {
-                for(int y=0; y<30;y++)
+                for(int y=0; y< mushrooms.GetLength(0); y++)
                 {
                     mushrooms[x, y] = new Mushroom(new Rectangle(x * 20, y * 20 + 40, 20, 20));
                 }
@@ -74,9 +77,9 @@ namespace Centipede
             none = Content.Load<Texture2D>("blank");
             mushTexts[0] = img;
             mushTexts[1] = none;
-            for (int x = 0; x < 30; x++)
+            for (int x = 0; x < mushrooms.GetLength(0); x++)
             {
-                for (int y = 0; y < 30; y++)
+                for (int y = 0; y < mushrooms.GetLength(0); y++)
                 {
                     mushrooms[x, y].setTex(mushTexts);
                 }
@@ -105,9 +108,11 @@ namespace Centipede
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
-
+            kb=Keyboard.GetState();
             // TODO: Add your update logic here
-
+            if (kb.IsKeyDown(Keys.W) && !kbO.IsKeyDown(Keys.W))
+                restart();
+            kbO = kb;
             base.Update(gameTime);
         }
 
@@ -119,9 +124,9 @@ namespace Centipede
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
-            for (int x = 0; x < 30; x++)
+            for (int x = 0; x < mushrooms.GetLength(0); x++)
             {
-                for (int y = 0; y < 30; y++)
+                for (int y = 0; y < mushrooms.GetLength(0); y++)
                 {
                     mushrooms[x, y].Draw(spriteBatch, gameTime);
                 }
@@ -149,13 +154,43 @@ namespace Centipede
             }
             return total;
         }
+
         public void restart()
         {
-            while (checkArray(mushrooms) < level * 10)
+            if(level<=15)
+                level++;
+            for (int a = 0; a < mushrooms.GetLength(0); a++)
             {
+                for (int b = 0; b < mushrooms.GetLength(0); b++)
+                {
+                    mushrooms[a, b].visible = false;
+                }
+            }
+                while (checkArray(mushrooms) < level * 10)
+                {
+                bool check = false;
                 int x = rng.Next(30);
                 int y = rng.Next(30);
+                if(x-1>=0)
+                {
+                    if (y - 1 >= 0)
+                        if (mushrooms[x - 1, y - 1].visible == true)
+                            check = true;
+                    if (y + 1 < mushrooms.GetLength(0))
+                        if (mushrooms[x - 1, y + 1].visible == true)
+                            check = true;
+                }
 
+                if (x + 1 < mushrooms.GetLength(0))
+                {
+                    if (y - 1 >= 0)
+                        if (mushrooms[x + 1, y - 1].visible == true)
+                            check = true;
+                    if (y + 1 < mushrooms.GetLength(0))
+                        if (mushrooms[x + 1, y + 1].visible == true)
+                            check = true;
+                }
+                if (check==false)
                 mushrooms[x, y].generate();
             }
         }
