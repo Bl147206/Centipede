@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Centipede
 {
-    class Player
+    public class Player
     {
 
         //top measured in pixels the ship can travel above the bottum of the screen
@@ -51,6 +51,7 @@ namespace Centipede
         public void setTex(Texture2D playerTex)
         {
             this.playerTex = playerTex;
+            
         }
 
         //movement methods
@@ -84,9 +85,9 @@ namespace Centipede
             {
                 playerRec.X = 0;
             }
-            if (playerRec.X > rightEdge - playerRec.X)
+            if (playerRec.X > rightEdge - playerRec.Width)
             {
-                playerRec.X = rightEdge - playerRec.X;
+                playerRec.X = rightEdge - playerRec.Width;
             }
             if (playerRec.Y > bottomEdge - playerRec.Height)
             {

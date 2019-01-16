@@ -64,8 +64,7 @@ namespace Centipede
                 }
             }
             restart();
-
-            player = new Player(null, new Rectangle(20, 20, 20, 20),
+            player = new Player(null, new Rectangle(0, GraphicsDevice.Viewport.Height - 20, 20, 20),
                 GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
 
             base.Initialize();
@@ -90,8 +89,8 @@ namespace Centipede
                     mushrooms[x, y].setTex(mushTexts);
                 }
             }
-
-            player.setTex(img);
+            
+            player.setTex(Content.Load<Texture2D>("graphicstest"));
 
             // TODO: use this.Content to load your game content here
 
@@ -123,10 +122,33 @@ namespace Centipede
             if (kb.IsKeyDown(Keys.LeftAlt) && !kbO.IsKeyDown(Keys.LeftAlt))
                 restart();//This is to test what you are working on in multiple levels. (Secret skip button)
 
+
+
+
+
+
+
+
+
+
+
+
             //player movement logic
             if (kb.IsKeyDown(Keys.W))
             {
-
+                player.moveUp();
+            }
+            if (kb.IsKeyDown(Keys.A))
+            {
+                player.moveLeft();
+            }
+            if (kb.IsKeyDown(Keys.D))
+            {
+                player.moveRight();
+            }
+            if (kb.IsKeyDown(Keys.S))
+            {
+                player.moveDown();
             }
 
             kbO = kb;
@@ -141,6 +163,7 @@ namespace Centipede
         {
             GraphicsDevice.Clear(backgroundColor);
             spriteBatch.Begin();
+            player.draw(spriteBatch, gameTime);
             //for (int x = 0; x < mushrooms.GetLength(0); x++)
             //{
             //    for (int y = 0; y < mushrooms.GetLength(0); y++)
@@ -148,7 +171,6 @@ namespace Centipede
             //        mushrooms[x, y].Draw(spriteBatch, gameTime);
             //    }
             //}
-            player.draw(spriteBatch, gameTime);
             spriteBatch.End();
 
 
@@ -218,6 +240,32 @@ namespace Centipede
                 if (check==false)
                 mushrooms[x, y].generate();
             }
+        }
+        public bool[] Collision(Player pc)
+        {
+            Rectangle one = pc.getRec();
+            bool[] check = new bool[4];
+            for (int z = 0; z < check.Length; z++)
+                check[z] = false;
+            for (int x = 0; x < mushrooms.GetLength(0); x++)
+            {
+                for (int y = 0; y < mushrooms.GetLength(0); y++)
+                {
+                    if (mushrooms[x, y].loc.Intersects(one)&&mushrooms[x,y].visible)
+                        if (mushrooms[x, y].loc.X + mushrooms[x, y].loc.Width >= one.X)
+                            check[2] = true;
+                    if (mushrooms[x, y].loc.Intersects(one))
+                        if (mushrooms[x, y].loc.X + mushrooms[x, y].loc.Width >= one.X)
+                            check[2] = true;
+                    if (mushrooms[x, y].loc.Intersects(one))
+                        if (mushrooms[x, y].loc.X + mushrooms[x, y].loc.Width >= one.X)
+                            check[2] = true;
+                    if (mushrooms[x, y].loc.Intersects(one))
+                        if (mushrooms[x, y].loc.X + mushrooms[x, y].loc.Width >= one.X)
+                            check[2] = true;
+                }
+            }
+            return check;
         }
     }
 
