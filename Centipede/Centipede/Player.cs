@@ -10,12 +10,20 @@ namespace Centipede
     {
 
         //top measured in pixels the ship can travel above the bottum of the screen
-        const int top = 100, rightEdge = 600, bottomEdge = 640;
+        const int top = 100;
 
-        int speedY = 3, speedX = 3;
+        int speedY = 3, speedX = 3, rightEdge = 600, bottomEdge = 640;
 
         Texture2D playerTex;
         Rectangle playerRec;
+
+        public Player(Texture2D playerTex, Rectangle playerRec, int rightEdge, int bottomEdge)
+        {
+            this.playerTex = playerTex;
+            this.playerRec = playerRec;
+            this.rightEdge = rightEdge;
+            this.bottomEdge = bottomEdge;
+        }
 
         public Player(Texture2D playerTex, Rectangle playerRec)
         {
@@ -95,6 +103,7 @@ namespace Centipede
         public void draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
             spriteBatch.Draw(playerTex, playerRec, Color.White);
+            
         }
 
 

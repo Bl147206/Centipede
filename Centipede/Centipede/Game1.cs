@@ -24,6 +24,7 @@ namespace Centipede
         Texture2D[] mushTexts;
         Texture2D img;//Use this texture if you want to test the visuals. We need to delete this before we submit project.
         Texture2D none;
+        Player player;
         Random rng;
         public int level;
         KeyboardState kb;
@@ -62,6 +63,9 @@ namespace Centipede
             }
             restart();
 
+            player = new Player(null, new Rectangle(20, 20, 0, 0),
+                GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+
             base.Initialize();
         }
 
@@ -84,6 +88,8 @@ namespace Centipede
                     mushrooms[x, y].setTex(mushTexts);
                 }
             }
+
+            player.setTex(img);
 
             // TODO: use this.Content to load your game content here
 
@@ -109,9 +115,18 @@ namespace Centipede
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
             kb=Keyboard.GetState();
+
             // TODO: Add your update logic here
+
             if (kb.IsKeyDown(Keys.LeftAlt) && !kbO.IsKeyDown(Keys.LeftAlt))
                 restart();//This is to test what you are working on in multiple levels. (Secret skip button)
+
+            //player movement logic
+            if (kb.IsKeyDown(Keys.W))
+            {
+
+            }
+
             kbO = kb;
             base.Update(gameTime);
         }
@@ -124,13 +139,14 @@ namespace Centipede
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
-            for (int x = 0; x < mushrooms.GetLength(0); x++)
-            {
-                for (int y = 0; y < mushrooms.GetLength(0); y++)
-                {
-                    mushrooms[x, y].Draw(spriteBatch, gameTime);
-                }
-            }
+            //for (int x = 0; x < mushrooms.GetLength(0); x++)
+            //{
+            //    for (int y = 0; y < mushrooms.GetLength(0); y++)
+            //    {
+            //        mushrooms[x, y].Draw(spriteBatch, gameTime);
+            //    }
+            //}
+            player.draw(spriteBatch, gameTime);
             spriteBatch.End();
 
 
