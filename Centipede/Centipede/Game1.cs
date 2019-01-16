@@ -29,6 +29,8 @@ namespace Centipede
         public int level;
         KeyboardState kb;
         KeyboardState kbO;
+        Color backgroundColor;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -159,7 +161,7 @@ namespace Centipede
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Black);
+            GraphicsDevice.Clear(backgroundColor);
             spriteBatch.Begin();
             player.draw(spriteBatch, gameTime);
             //for (int x = 0; x < mushrooms.GetLength(0); x++)
@@ -193,10 +195,17 @@ namespace Centipede
             return total;
         }
 
+        // TODO: Once we introduce Centipede speed, also update that here as well
+        public void updateLevel() {
+            if (level <= 15)
+                level += 1;
+
+            backgroundColor = Globals.backgroundColors[level % Globals.backgroundColors.Length];
+        }
+
         public void restart()
         {
-            if(level<=15)
-                level++;
+            updateLevel();
             for (int a = 0; a < mushrooms.GetLength(0); a++)
             {
                 for (int b = 0; b < mushrooms.GetLength(0); b++)
@@ -231,6 +240,32 @@ namespace Centipede
                 if (check==false)
                 mushrooms[x, y].generate();
             }
+        }
+        public bool[] Collision(Player pc)
+        {
+            Rectangle one = pc.getRec();
+            bool[] check = new bool[4];
+            for (int z = 0; z < check.Length; z++)
+                check[z] = false;
+            for (int x = 0; x < mushrooms.GetLength(0); x++)
+            {
+                for (int y = 0; y < mushrooms.GetLength(0); y++)
+                {
+                    if (mushrooms[x, y].loc.Intersects(one)&&mushrooms[x,y].visible)
+                        if (mushrooms[x, y].loc.X + mushrooms[x, y].loc.Width >= one.X)
+                            check[2] = true;
+                    if (mushrooms[x, y].loc.Intersects(one))
+                        if (mushrooms[x, y].loc.X + mushrooms[x, y].loc.Width >= one.X)
+                            check[2] = true;
+                    if (mushrooms[x, y].loc.Intersects(one))
+                        if (mushrooms[x, y].loc.X + mushrooms[x, y].loc.Width >= one.X)
+                            check[2] = true;
+                    if (mushrooms[x, y].loc.Intersects(one))
+                        if (mushrooms[x, y].loc.X + mushrooms[x, y].loc.Width >= one.X)
+                            check[2] = true;
+                }
+            }
+            return check;
         }
     }
 
