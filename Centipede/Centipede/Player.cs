@@ -12,7 +12,7 @@ namespace Centipede
         //top measured in pixels the ship can travel above the bottum of the screen
         const int top = 100;
 
-        int speedY = 3, speedX = 3, rightEdge = 600, bottomEdge = 640;
+        public int speedY = 3, speedX = 3, rightEdge = 600, bottomEdge = 640;
 
         Texture2D playerTex;
         Rectangle playerRec;
