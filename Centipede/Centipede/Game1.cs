@@ -112,22 +112,6 @@ namespace Centipede
             // TODO: Add your update logic here
             if (kb.IsKeyDown(Keys.LeftAlt) && !kbO.IsKeyDown(Keys.LeftAlt))
                 restart();//This is to test what you are working on in multiple levels. (Secret skip button)
-            if (kb.IsKeyDown(Keys.W) && !kbO.IsKeyDown(Keys.W))
-            {
-
-            }
-            if (kb.IsKeyDown(Keys.A) && !kbO.IsKeyDown(Keys.A))
-            {
-
-            }
-            if (kb.IsKeyDown(Keys.S) && !kbO.IsKeyDown(Keys.S))
-            {
-
-            }
-            if (kb.IsKeyDown(Keys.D) && !kbO.IsKeyDown(Keys.D))
-            {
-
-            }
             kbO = kb;
             base.Update(gameTime);
         }
@@ -209,19 +193,6 @@ namespace Centipede
                 if (check==false)
                 mushrooms[x, y].generate();
             }
-        }
-        public bool Collision(Rectangle one)
-        {
-            bool check=false;
-            for (int x = 0; x < mushrooms.GetLength(0); x++)
-            {
-                for (int y = 0; y < mushrooms.GetLength(0); y++)
-                {
-                    if (mushrooms[x, y].loc.Intersects(one))
-                        check = true;
-                }
-            }
-            return check;
         }
     }
 
