@@ -21,7 +21,9 @@ namespace Centipede
 
         Mushroom[,] mushrooms;
         LinkedList<Centipede> centipedes;
-
+        Texture2D[] mushTexts;
+        Texture2D img;//Use this texture if you want to test the visuals. We need to delete this before we submit project.
+        Texture2D none;
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -41,11 +43,14 @@ namespace Centipede
         {
             // TODO: Add your initialization logic here
             mushrooms = new Mushroom[30,30];
-            for(int x=0; x<mushrooms.Length; x++)
+            mushTexts = new Texture2D[2];
+  
+            for(int x=0; x<30; x++)
             {
-                for(int y=0; y<mushrooms.Length;y++)
+                for(int y=0; y<30;y++)
                 {
                     mushrooms[x, y] = new Mushroom(new Rectangle(x * 20, y * 20 + 40, 20, 20));
+                    //Console.Write(mushrooms[x, y].loc.X + "  "+mushrooms[x, y].loc.Y+"  "+x+"  "+y+"\n");
                 }
             }
 
@@ -60,6 +65,17 @@ namespace Centipede
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            img = Content.Load<Texture2D>("graphicsTest");
+            none = Content.Load<Texture2D>("blank");
+            mushTexts[0] = img;
+            mushTexts[1] = none;
+            for (int x = 0; x < 30; x++)
+            {
+                for (int y = 0; y < 30; y++)
+                {
+                    mushrooms[x, y].setTex(mushTexts);
+                }
+            }
 
             // TODO: use this.Content to load your game content here
 
@@ -97,6 +113,16 @@ namespace Centipede
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            spriteBatch.Begin();
+            for (int x = 0; x < 30; x++)
+            {
+                for (int y = 0; y < 30; y++)
+                {
+                    mushrooms[x, y].Draw(spriteBatch, gameTime);
+                }
+            }
+            spriteBatch.End();
+
 
             // TODO: Add your drawing code here
 

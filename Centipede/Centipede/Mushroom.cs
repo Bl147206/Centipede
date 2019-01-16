@@ -13,8 +13,8 @@ namespace Centipede
 {
     class Mushroom
     {
-        Texture2D[] texts;
-        Rectangle loc;
+        Texture2D[] texts;//First image in array is the texture, second one is blank at the moment
+        public Rectangle loc;
         int damage;
         bool visible;
 
@@ -46,7 +46,7 @@ namespace Centipede
             }
         }
 
-        public void draw(SpriteBatch spriteBatch, GameTime gameTime)
+        public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
             spriteBatch.Draw(texts[damage], loc, Color.White);
         }
