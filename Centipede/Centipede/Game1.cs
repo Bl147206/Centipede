@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -34,6 +35,8 @@ namespace Centipede
         KeyboardState kb;
         KeyboardState kbO;
         Color backgroundColor;
+        StreamReader recieveScores;
+        StreamWriter writeScores;
 
         public Game1()
         {
@@ -157,17 +160,17 @@ namespace Centipede
             if (player.isFiring)
                 score+=player.updateProj(mushrooms);
 
-            Console.WriteLine(score);
+            
 
 
             //Centipede cleaning
-            foreach(Centipede c in centipedes)
-            {
-                if(c.size() == 0)
-                {
-                    centipedes.Remove(c);
-                }
-            }
+            //foreach (Centipede c in centipedes)
+            //{
+            //    if (c.size() == 0)
+            //    {
+            //        centipedes.Remove(c);
+            //    }
+            //}
 
             kbO = kb;
             base.Update(gameTime);
