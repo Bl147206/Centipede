@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -45,7 +46,25 @@ namespace Centipede
             // FIXME: When we introduce projectiles and mushroom hits update this to reflect new mushroom textures
             if (!visible) return;
 
-            spriteBatch.Draw(Globals.mushroom0, loc, Color.White);
+            Debug.Assert(damage <= 2, "We should not have damage values greater than 2");
+
+            Texture2D mushroomTexture;
+
+            switch (damage) {
+                case 0:
+                    mushroomTexture = Globals.mushroom0;
+                    break;
+                case 1:
+                    mushroomTexture = Globals.mushroom1;
+                    break;
+                case 2:
+                    mushroomTexture = Globals.mushroom2;
+                    break;
+                default:
+                    return;
+            }
+
+            spriteBatch.Draw(mushroomTexture, loc, Color.White);
         }
     }
 }
