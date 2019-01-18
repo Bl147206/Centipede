@@ -233,11 +233,19 @@ namespace Centipede
         public bool[] Collision(Player pc)
         {
             Rectangle one = pc.getRec();
-            int indexX;
-            int indexY; 
+            int indexU= (one.Y-pc.speedY)/20;
+            int indexD=(one.Y + pc.speedY)/20;
+            int indexL = (one.X - pc.speedX)/20;
+            int indexR = (one.Y + pc.speedY)/20;
             bool[] check = new bool[4];//Boolean Order: Up, Down, Left, Right
-            for (int z = 0; z < check.Length; z++)
-                check[z] = false;
+            if (mushrooms[one.X/20, indexU].visible == true)
+                check[0] = true;
+            if (mushrooms[one.X/20, indexD].visible == true)
+                check[1] = true;
+            if (mushrooms[indexL, one.Y/20].visible == true)
+                check[2] = true;
+            if (mushrooms[indexR + 1, one.Y/20].visible == true)
+                check[3] = true;
             return check;
         }
     }
