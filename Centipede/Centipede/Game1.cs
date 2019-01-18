@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -153,6 +154,16 @@ namespace Centipede
                 score+=player.updateProj(mushrooms);
 
             Console.WriteLine(score);
+
+
+            //Centipede cleaning
+            foreach(Centipede c in centipedes)
+            {
+                if(c.size() == 0)
+                {
+                    centipedes.Remove(c);
+                }
+            }
 
             kbO = kb;
             base.Update(gameTime);
