@@ -135,7 +135,7 @@ namespace Centipede
                 player.fire();
 
             if (player.isFiring)
-                score += player.updateProj(mushrooms);
+                score += player.updateProj(level.mushrooms);
 
             Console.WriteLine(score);
 
@@ -180,38 +180,6 @@ namespace Centipede
             level = new Level(level.id);
         }
 
-        public void restart() {
-            updateLevel();
-            for (int a = 0; a < mushrooms.GetLength(0); a++) {
-                for (int b = 0; b < mushrooms.GetLength(0); b++) {
-                    mushrooms[a, b].visible = false;
-                }
-            }
-            while (checkArray(mushrooms) < level * 10) {
-                bool check = false;
-                int x = rng.Next(30);
-                int y = rng.Next(30);
-                if (x - 1 >= 0) {
-                    if (y - 1 >= 0)
-                        if (mushrooms[x - 1, y - 1].visible == true)
-                            check = true;
-                    if (y + 1 < mushrooms.GetLength(0))
-                        if (mushrooms[x - 1, y + 1].visible == true)
-                            check = true;
-                }
-
-                if (x + 1 < mushrooms.GetLength(0)) {
-                    if (y - 1 >= 0)
-                        if (mushrooms[x + 1, y - 1].visible == true)
-                            check = true;
-                    if (y + 1 < mushrooms.GetLength(0))
-                        if (mushrooms[x + 1, y + 1].visible == true)
-                            check = true;
-                }
-                if (check == false)
-                    mushrooms[x, y].generate();
-            }
-        }
         public bool Collision(Player pc, int direction) {
             Rectangle one = pc.getRec();
             int oneCx = one.X + (one.Width / 2);
@@ -223,7 +191,7 @@ namespace Centipede
             check[2] = false;
             check[3] = false;
 
-            foreach (Mushroom m in mushrooms) {
+            foreach (Mushroom m in level.mushrooms) {
                 int centerX = m.loc.X + (m.loc.Width / 2);
                 int centerY = m.loc.Y + (m.loc.Height / 2);
                 if (one.Intersects(m.loc) && centerY < oneCy && m.visible)//Top
