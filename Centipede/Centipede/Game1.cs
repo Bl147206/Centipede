@@ -150,7 +150,9 @@ namespace Centipede
                 player.fire();
 
             if (player.isFiring)
-                player.updateProj(mushrooms);
+                score+=player.updateProj(mushrooms);
+
+            Console.WriteLine(score);
 
             kbO = kb;
             base.Update(gameTime);

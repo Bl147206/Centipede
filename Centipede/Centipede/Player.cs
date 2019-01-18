@@ -119,9 +119,9 @@ namespace Centipede
             }
         }
 
-        public void updateProj(Mushroom[,] mushrooms)
+        public int updateProj(Mushroom[,] mushrooms)
         {
-            proj.Y-=5;
+            proj.Y-=10;
             if (proj.Y < 0)
                 isFiring = false;
             foreach(Mushroom m in mushrooms)
@@ -129,9 +129,11 @@ namespace Centipede
                 if (proj.Intersects(m.loc) && m.visible)
                 {
                     isFiring = false;
-                    m.hit();
+                    if (m.hit())
+                        return 1;
                 }
             }
+            return 0;
         }
 
         //draw method
