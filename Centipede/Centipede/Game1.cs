@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -14,10 +15,13 @@ namespace Centipede
     /// <summary>
     /// This is the main type for your game
     /// </summary>
+    
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+
+        int score;
 
         Mushroom[,] mushrooms;
         LinkedList<Centipede> centipedes;
@@ -55,9 +59,9 @@ namespace Centipede
             rng = new Random();
             level = 0;
             kbO = Keyboard.GetState();
-
-
-            for (int x=0; x< mushrooms.GetLength(0); x++)
+            score = 0;
+  
+            for(int x=0; x< mushrooms.GetLength(0); x++)
             {
                 for(int y=0; y< mushrooms.GetLength(0); y++)
                 {
@@ -151,7 +155,19 @@ namespace Centipede
                 player.fire();
 
             if (player.isFiring)
-                player.updateProj(mushrooms);
+                score+=player.updateProj(mushrooms);
+
+            Console.WriteLine(score);
+
+
+            //Centipede cleaning
+            foreach(Centipede c in centipedes)
+            {
+                if(c.size() == 0)
+                {
+                    centipedes.Remove(c);
+                }
+            }
 
             kbO = kb;
             base.Update(gameTime);

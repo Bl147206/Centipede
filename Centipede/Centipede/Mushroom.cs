@@ -36,14 +36,16 @@ namespace Centipede
             damage = 0;
             visible = true;
         }
-
-        public void hit()
+        
+        public bool hit()
         {
             damage++;
             if(damage>2)
             {
                 visible = false;
+                return true;
             }
+            return false;
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
