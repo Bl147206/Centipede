@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -13,22 +14,15 @@ namespace Centipede
 {
     public class Mushroom
     {
-        Texture2D[] texts;//First image in array is the texture, second one is blank at the moment
         public Rectangle loc;
         int damage;
         public bool visible;
 
         public Mushroom(Rectangle l)
         {
-            texts = null;
             loc = l;
             damage = 0;
             visible = false;
-        }
-
-        public void setTex(Texture2D[] t)
-        {
-            texts = t;
         }
 
         public void generate()
@@ -37,20 +31,41 @@ namespace Centipede
             visible = true;
         }
         
-        public void hit()
+        public bool hit()
         {
             damage++;
             if(damage>2)
             {
                 visible = false;
-                
+                return true;
             }
+            return false;
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            if(visible == true)
-                spriteBatch.Draw(texts[damage], loc, Color.White);
+            // FIXME: When we introduce projectiles and mushroom hits update this to reflect new mushroom textures
+            if (!visible) return;
+
+            Debug.Assert(damage <= 2, "We should not have damage values greater than 2");
+
+            Texture2D mushroomTexture;
+
+            switch (damage) {
+                case 0:
+                    mushroomTexture = Globals.mushroom0;
+                    break;
+                case 1:
+                    mushroomTexture = Globals.mushroom1;
+                    break;
+                case 2:
+                    mushroomTexture = Globals.mushroom2;
+                    break;
+                default:
+                    return;
+            }
+
+            spriteBatch.Draw(mushroomTexture, loc, Color.White);
         }
     }
 }

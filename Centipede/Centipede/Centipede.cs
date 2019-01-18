@@ -31,8 +31,7 @@ namespace Centipede
             buildSnake();
         }
 
-        public Centipede(Rectangle[] body, int velocity, int left, int right, int top, int bottom)
-        {
+        public Centipede(Rectangle[] body, int velocity, int left, int right, int top, int bottom) {
             this.body = body;
             this.velocity = velocity;
             topBound = top;
@@ -76,31 +75,25 @@ namespace Centipede
             }
         }
 
-        public Rectangle[] hit(int segment)
-        {
-            Rectangle[] ret = new Rectangle[body.Length-segment];
+        public Rectangle[] hit(int segment) {
+            Rectangle[] ret = new Rectangle[body.Length - segment];
             Rectangle[] newBody = new Rectangle[segment];
-            for(int index = 0; index < body.Length; index++)
-            {
-                if (index < segment)
-                {
+            for (int index = 0; index < body.Length; index++) {
+                if (index < segment) {
                     newBody[index] = body[index];
                 }
-                if(index > segment)
-                {
+                if (index > segment) {
                     ret[index] = body[index];
                 }
             }
             body = newBody;
-            if(newBody.Length == 0)
-            {
+            if (newBody.Length == 0) {
                 body = null;
             }
             return ret;
         }
 
-        public int size()
-        {
+        public int size() {
             return body.Length;
         }
 
