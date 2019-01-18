@@ -44,19 +44,6 @@ namespace Centipede
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-            mushrooms = new Mushroom[30, 30];
-            mushTexts = new Texture2D[3];
-            rng = new Random();
-            level = 0;
-            kbO = Keyboard.GetState();
-
-            for (int x = 0; x < mushrooms.GetLength(0); x++) {
-                for (int y = 0; y < mushrooms.GetLength(0); y++) {
-                    mushrooms[x, y] = new Mushroom(new Rectangle(x * 20, y * 20 + 40, 20, 20));
-                }
-            }
-            restart();
             player = new Player(null, null, new Rectangle(0, GraphicsDevice.Viewport.Height - 20, 20, 20),
                 GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
 
@@ -75,14 +62,10 @@ namespace Centipede
             spriteBatch = new SpriteBatch(GraphicsDevice);
             img = Content.Load<Texture2D>("graphicsTest");
             none = Content.Load<Texture2D>("blank");
-            mushTexts[0] = img;
-            mushTexts[1] = Content.Load<Texture2D>("dmg1");
-            mushTexts[2] = Content.Load<Texture2D>("dmg2");
-            for (int x = 0; x < mushrooms.GetLength(0); x++) {
-                for (int y = 0; y < mushrooms.GetLength(0); y++) {
-                    mushrooms[x, y].setTex(mushTexts);
-                }
-            }
+
+            Globals.mushroom0 = img;
+            Globals.mushroom1 = Content.Load<Texture2D>("dmg1");
+            Globals.mushroom2 = Content.Load<Texture2D>("dmg2");
 
             player.setTex(Content.Load<Texture2D>("graphicstest"));
             player.setProjTex(Content.Load<Texture2D>("graphicstest"));
