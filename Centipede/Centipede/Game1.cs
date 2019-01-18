@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -137,7 +138,7 @@ namespace Centipede
             if (player.isFiring)
                 score += player.updateProj(level.mushrooms);
 
-            Console.WriteLine(score);
+            
 
 
             //Centipede cleaning
