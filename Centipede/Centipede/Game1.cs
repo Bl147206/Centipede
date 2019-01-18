@@ -14,10 +14,13 @@ namespace Centipede
     /// <summary>
     /// This is the main type for your game
     /// </summary>
+    
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+
+        int score;
 
         Mushroom[,] mushrooms;
         LinkedList<Centipede> centipedes;
@@ -55,6 +58,7 @@ namespace Centipede
             rng = new Random();
             level = 0;
             kbO = Keyboard.GetState();
+            score = 0;
   
             for(int x=0; x< mushrooms.GetLength(0); x++)
             {
