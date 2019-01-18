@@ -16,17 +16,30 @@ namespace Centipede
         Rectangle[] body;
         Texture2D[] head;
         Texture2D[] bodyTex;
+        Vector4 bounds;
         int velocity;
 
-        public Centipede(int length)
+        public Centipede(int length,int diff,int left, int right,int top,int bottom)
         {
-            body = new Rectangle[length];            
+            body = new Rectangle[length];
+            velocity = diff*-1;
+            bounds = new Vector4(left, right, top, bottom);
         }
 
         public void setTextures(Texture2D[] h, Texture2D[] b)
         {
             head = h;
             bodyTex = b;
+        }
+
+        public void Update()
+        {
+            for (int i = 0; i < body.Length; i++)
+            {
+                body[i].X += velocity;
+            }
+            if (body[0].X < bounds.X || body[0].X > bounds.Y)
+                velocity *= -1;
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
@@ -36,6 +49,13 @@ namespace Centipede
             {
                 spriteBatch.Draw(bodyTex[gameTime.ElapsedGameTime.Ticks % 8], body[i], Color.White);
             }
+        }
+
+        public int hit(int segment)
+        {
+            int ret = body.Length - segment;
+
+            return 0;
         }
 
 

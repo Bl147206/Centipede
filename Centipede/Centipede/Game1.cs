@@ -44,8 +44,20 @@ namespace Centipede
         /// </summary>
         protected override void Initialize()
         {
+            // TODO: Add your initialization logic here
+            mushrooms = new Mushroom[30, 30];
+            mushTexts = new Texture2D[3];
+            rng = new Random();
+            level = 0;
             kbO = Keyboard.GetState();
-            player = new Player(null, new Rectangle(20, 20, 0, 0),
+
+            for (int x = 0; x < mushrooms.GetLength(0); x++) {
+                for (int y = 0; y < mushrooms.GetLength(0); y++) {
+                    mushrooms[x, y] = new Mushroom(new Rectangle(x * 20, y * 20 + 40, 20, 20));
+                }
+            }
+            restart();
+            player = new Player(null, null, new Rectangle(0, GraphicsDevice.Viewport.Height - 20, 20, 20),
                 GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
 
             level = new Level();
@@ -63,12 +75,20 @@ namespace Centipede
             spriteBatch = new SpriteBatch(GraphicsDevice);
             img = Content.Load<Texture2D>("graphicsTest");
             none = Content.Load<Texture2D>("blank");
-            
-            // Set global mushroom textures
-            // FIXME: At the moment we only set the full mushroom
-            Globals.mushroom0 = img;
+            mushTexts[0] = img;
+            mushTexts[1] = Content.Load<Texture2D>("dmg1");
+            mushTexts[2] = Content.Load<Texture2D>("dmg2");
+            for (int x = 0; x < mushrooms.GetLength(0); x++) {
+                for (int y = 0; y < mushrooms.GetLength(0); y++) {
+                    mushrooms[x, y].setTex(mushTexts);
+                }
+            }
 
-            player.setTex(img);
+            player.setTex(Content.Load<Texture2D>("graphicstest"));
+            player.setProjTex(Content.Load<Texture2D>("graphicstest"));
+
+            // TODO: use this.Content to load your game content here
+
         }
 
         /// <summary>
@@ -173,25 +193,19 @@ namespace Centipede
         public bool[] Collision(Player pc)
         {
             Rectangle one = pc.getRec();
-            bool[] check = new bool[4];
-            for (int z = 0; z < check.Length; z++)
-                check[z] = false;
-            for (int x = 0; x < mushrooms.GetLength(0); x++) {
-                for (int y = 0; y < mushrooms.GetLength(0); y++) {
-                    if (mushrooms[x, y].loc.Intersects(one))
-                        if (mushrooms[x, y].loc.X + mushrooms[x, y].loc.Width >= one.X)
-                            check[2] = true;
-                    if (mushrooms[x, y].loc.Intersects(one))
-                        if (mushrooms[x, y].loc.X + mushrooms[x, y].loc.Width >= one.X)
-                            check[2] = true;
-                    if (mushrooms[x, y].loc.Intersects(one))
-                        if (mushrooms[x, y].loc.X + mushrooms[x, y].loc.Width >= one.X)
-                            check[2] = true;
-                    if (mushrooms[x, y].loc.Intersects(one))
-                        if (mushrooms[x, y].loc.X + mushrooms[x, y].loc.Width >= one.X)
-                            check[2] = true;
-                }
-            }
+            int indexU = (one.Y - pc.speedY) / 20;
+            int indexD = (one.Y + pc.speedY) / 20;
+            int indexL = (one.X - pc.speedX) / 20;
+            int indexR = (one.Y + pc.speedY) / 20;
+            bool[] check = new bool[4];//Boolean Order: Up, Down, Left, Right
+            if (mushrooms[one.X / 20, indexU].visible == true)
+                check[0] = true;
+            if (mushrooms[one.X / 20, indexD].visible == true)
+                check[1] = true;
+            if (mushrooms[indexL, one.Y / 20].visible == true)
+                check[2] = true;
+            if (mushrooms[indexR + 1, one.Y / 20].visible == true)
+                check[3] = true;
             return check;
         }
     }

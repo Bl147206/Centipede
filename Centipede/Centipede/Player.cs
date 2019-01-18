@@ -12,17 +12,23 @@ namespace Centipede
         //top measured in pixels the ship can travel above the bottum of the screen
         const int top = 100;
 
-        int speedY = 3, speedX = 3, rightEdge = 600, bottomEdge = 640;
+        public int speedY = 3, speedX = 3, rightEdge = 600, bottomEdge = 640;
 
         Texture2D playerTex;
         Rectangle playerRec;
+        public bool isFiring;
+        Rectangle proj;
+        Texture2D projTex;
 
-        public Player(Texture2D playerTex, Rectangle playerRec, int rightEdge, int bottomEdge)
+        public Player(Texture2D playerTex,Texture2D projTex, Rectangle playerRec, int rightEdge, int bottomEdge)
         {
             this.playerTex = playerTex;
             this.playerRec = playerRec;
             this.rightEdge = rightEdge;
             this.bottomEdge = bottomEdge;
+            isFiring = false;
+            proj = new Rectangle();
+            this.projTex = projTex;
         }
 
         public Player(Texture2D playerTex, Rectangle playerRec)
@@ -51,6 +57,12 @@ namespace Centipede
         public void setTex(Texture2D playerTex)
         {
             this.playerTex = playerTex;
+            
+        }
+
+        public void setProjTex(Texture2D projTex)
+        {
+            this.projTex = projTex;
         }
 
         //movement methods
@@ -84,9 +96,9 @@ namespace Centipede
             {
                 playerRec.X = 0;
             }
-            if (playerRec.X > rightEdge - playerRec.X)
+            if (playerRec.X > rightEdge - playerRec.Width)
             {
-                playerRec.X = rightEdge - playerRec.X;
+                playerRec.X = rightEdge - playerRec.Width;
             }
             if (playerRec.Y > bottomEdge - playerRec.Height)
             {
@@ -98,11 +110,37 @@ namespace Centipede
             }
         }
 
+        public void fire()
+        {
+            if (!isFiring)
+            {
+                proj = new Rectangle(playerRec.X+(playerRec.Width/2)-2, playerRec.Y, 4, 12);
+                isFiring = true;
+            }
+        }
+
+        public void updateProj(Mushroom[,] mushrooms)
+        {
+            proj.Y-=5;
+            if (proj.Y < 0)
+                isFiring = false;
+            foreach(Mushroom m in mushrooms)
+            {
+                if (proj.Intersects(m.loc) && m.visible)
+                {
+                    isFiring = false;
+                    m.hit();
+                }
+            }
+        }
+
         //draw method
 
         public void draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
             spriteBatch.Draw(playerTex, playerRec, Color.White);
+            if (isFiring)
+                spriteBatch.Draw(projTex, proj, Color.White);
             
         }
 
