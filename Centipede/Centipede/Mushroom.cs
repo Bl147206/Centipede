@@ -13,22 +13,15 @@ namespace Centipede
 {
     public class Mushroom
     {
-        Texture2D[] texts;//First image in array is the texture, second one is blank at the moment
         public Rectangle loc;
         int damage;
         public bool visible;
 
         public Mushroom(Rectangle l)
         {
-            texts = null;
             loc = l;
             damage = 0;
             visible = false;
-        }
-
-        public void setTex(Texture2D[] t)
-        {
-            texts = t;
         }
 
         public void generate()
@@ -48,8 +41,8 @@ namespace Centipede
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            if(visible == true)
-                spriteBatch.Draw(texts[damage], loc, Color.White);
+            // FIXME: When we introduce projectiles and mushroom hits update this to reflect new mushroom textures
+            spriteBatch.Draw(Globals.mushroom0, loc, Color.White);
         }
     }
 }
