@@ -29,13 +29,14 @@ namespace Centipede
             damage = 0;
             visible = true;
         }
-
+        
         public void hit()
         {
             damage++;
             if(damage>2)
             {
                 visible = false;
+                
             }
         }
 

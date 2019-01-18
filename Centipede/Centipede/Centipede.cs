@@ -13,16 +13,22 @@ namespace Centipede
 {
     class Centipede
     {
+        
         Rectangle[] body;
         Texture2D[] head;
         Texture2D[] bodyTex;
         Vector4 bounds;
         int velocity;
 
-        public Centipede(int length,int diff,int left, int right,int top,int bottom)
-        {
+        public Centipede(int length, int velocity, int left, int right, int top, int bottom) {
             body = new Rectangle[length];
-            velocity = diff*-1;
+            this.velocity = velocity;
+            bounds = new Vector4(left, right, top, bottom);
+        }
+
+        public Centipede(Rectangle[] body, int velocity, int left, int right, int top, int bottom) {
+            this.body = body;
+            this.velocity = velocity;
             bounds = new Vector4(left, right, top, bottom);
         }
 
@@ -51,11 +57,26 @@ namespace Centipede
             }
         }
 
-        public int hit(int segment)
-        {
-            int ret = body.Length - segment;
+        public Rectangle[] hit(int segment) {
+            Rectangle[] ret = new Rectangle[body.Length - segment];
+            Rectangle[] newBody = new Rectangle[segment];
+            for (int index = 0; index < body.Length; index++) {
+                if (index < segment) {
+                    newBody[index] = body[index];
+                }
+                if (index > segment) {
+                    ret[index] = body[index];
+                }
+            }
+            body = newBody;
+            if (newBody.Length == 0) {
+                body = null;
+            }
+            return ret;
+        }
 
-            return 0;
+        public int size() {
+            return body.Length;
         }
 
 

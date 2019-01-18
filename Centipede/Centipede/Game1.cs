@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -14,11 +15,17 @@ namespace Centipede
     /// <summary>
     /// This is the main type for your game
     /// </summary>
+    
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        int score;
+
+        Mushroom[,] mushrooms;
+        LinkedList<Centipede> centipedes;
+        Texture2D[] mushTexts;
         Texture2D img;//Use this texture if you want to test the visuals. We need to delete this before we submit project.
         Texture2D none;
         Player player;
@@ -44,6 +51,20 @@ namespace Centipede
         /// </summary>
         protected override void Initialize()
         {
+            // TODO: Add your initialization logic here
+            mushrooms = new Mushroom[30, 30];
+            mushTexts = new Texture2D[3];
+            rng = new Random();
+            level = 0;
+            kbO = Keyboard.GetState();
+            score = 0;
+
+            for (int x = 0; x < mushrooms.GetLength(0); x++) {
+                for (int y = 0; y < mushrooms.GetLength(0); y++) {
+                    mushrooms[x, y] = new Mushroom(new Rectangle(x * 20, y * 20 + 40, 20, 20));
+                }
+            }
+            restart();
             player = new Player(null, null, new Rectangle(0, GraphicsDevice.Viewport.Height - 20, 20, 20),
                 GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
 
@@ -62,10 +83,14 @@ namespace Centipede
             spriteBatch = new SpriteBatch(GraphicsDevice);
             img = Content.Load<Texture2D>("graphicsTest");
             none = Content.Load<Texture2D>("blank");
-
-            Globals.mushroom0 = img;
-            Globals.mushroom1 = Content.Load<Texture2D>("dmg1");
-            Globals.mushroom2 = Content.Load<Texture2D>("dmg2");
+            mushTexts[0] = img;
+            mushTexts[1] = Content.Load<Texture2D>("dmg1");
+            mushTexts[2] = Content.Load<Texture2D>("dmg2");
+            for (int x = 0; x < mushrooms.GetLength(0); x++) {
+                for (int y = 0; y < mushrooms.GetLength(0); y++) {
+                    mushrooms[x, y].setTex(mushTexts);
+                }
+            }
 
             player.setTex(Content.Load<Texture2D>("graphicstest"));
             player.setProjTex(Content.Load<Texture2D>("graphicstest"));
@@ -122,7 +147,15 @@ namespace Centipede
                 player.fire();
 
             if (player.isFiring)
-                player.updateProj(level.mushrooms);
+                player.updateProj(mushrooms);
+
+
+            //Centipede cleaning
+            foreach (Centipede c in centipedes) {
+                if (c.size() == 0) {
+                    centipedes.Remove(c);
+                }
+            }
 
             kbO = kb;
             base.Update(gameTime);
@@ -137,11 +170,9 @@ namespace Centipede
             GraphicsDevice.Clear(level.backgroundColor);
             spriteBatch.Begin();
             player.draw(spriteBatch, gameTime);
-            for (int x = 0; x < level.mushrooms.GetLength(0); x++)
-            {
-                for (int y = 0; y < level.mushrooms.GetLength(0); y++)
-                {
-                    level.mushrooms[x, y].Draw(spriteBatch, gameTime);
+            for (int x = 0; x < mushrooms.GetLength(0); x++) {
+                for (int y = 0; y < mushrooms.GetLength(0); y++) {
+                    mushrooms[x, y].Draw(spriteBatch, gameTime);
                 }
             }
             spriteBatch.End();
@@ -165,13 +196,13 @@ namespace Centipede
             int indexL = (one.X - pc.speedX) / 20;
             int indexR = (one.Y + pc.speedY) / 20;
             bool[] check = new bool[4];//Boolean Order: Up, Down, Left, Right
-            if (level.mushrooms[one.X / 20, indexU].visible == true)
+            if (mushrooms[one.X / 20, indexU].visible == true)
                 check[0] = true;
-            if (level.mushrooms[one.X / 20, indexD].visible == true)
+            if (mushrooms[one.X / 20, indexD].visible == true)
                 check[1] = true;
-            if (level.mushrooms[indexL, one.Y / 20].visible == true)
+            if (mushrooms[indexL, one.Y / 20].visible == true)
                 check[2] = true;
-            if (level.mushrooms[indexR + 1, one.Y / 20].visible == true)
+            if (mushrooms[indexR + 1, one.Y / 20].visible == true)
                 check[3] = true;
             return check;
         }
