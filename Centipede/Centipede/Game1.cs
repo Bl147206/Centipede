@@ -24,19 +24,13 @@ namespace Centipede
 
         int score;
 
-        Mushroom[,] mushrooms;
         LinkedList<Centipede> centipedes;
-        Texture2D[] mushTexts;
         Texture2D img;//Use this texture if you want to test the visuals. We need to delete this before we submit project.
         Texture2D none;
         Player player;
-        Random rng;
-        public int level;
         KeyboardState kb;
         KeyboardState kbO;
-        Color backgroundColor;
-        StreamReader recieveScores;
-        StreamWriter writeScores;
+        Level level;
 
         public Game1()
         {
@@ -57,23 +51,13 @@ namespace Centipede
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            mushrooms = new Mushroom[30,30];
-            mushTexts = new Texture2D[3];
-            rng = new Random();
-            level = 0;
             kbO = Keyboard.GetState();
             score = 0;
-  
-            for(int x=0; x< mushrooms.GetLength(0); x++)
-            {
-                for(int y=0; y< mushrooms.GetLength(0); y++)
-                {
-                    mushrooms[x, y] = new Mushroom(new Rectangle(x * 20, y * 20 + 40, 20, 20));
-                }
-            }
-            restart();
-            player = new Player(null,null, new Rectangle(0, GraphicsDevice.Viewport.Height - 20, 20, 20),
+
+            player = new Player(null, null, new Rectangle(0, GraphicsDevice.Viewport.Height - 20, 20, 20),
                 GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+
+            level = new Level();
 
             base.Initialize();
         }
@@ -88,17 +72,11 @@ namespace Centipede
             spriteBatch = new SpriteBatch(GraphicsDevice);
             img = Content.Load<Texture2D>("graphicsTest");
             none = Content.Load<Texture2D>("blank");
-            mushTexts[0] = img;
-            mushTexts[1] = Content.Load<Texture2D>("dmg1");
-            mushTexts[2] = Content.Load<Texture2D>("dmg2");
-            for (int x = 0; x < mushrooms.GetLength(0); x++)
-            {
-                for (int y = 0; y < mushrooms.GetLength(0); y++)
-                {
-                    mushrooms[x, y].setTex(mushTexts);
-                }
-            }
-            
+
+            Globals.mushroom0 = img;
+            Globals.mushroom1 = Content.Load<Texture2D>("dmg1");
+            Globals.mushroom2 = Content.Load<Texture2D>("dmg2");
+
             player.setTex(Content.Load<Texture2D>("graphicstest"));
             player.setProjTex(Content.Load<Texture2D>("graphicstest"));
 
@@ -125,12 +103,12 @@ namespace Centipede
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
-            kb=Keyboard.GetState();
+            kb = Keyboard.GetState();
 
             // TODO: Add your update logic here
 
             if (kb.IsKeyDown(Keys.LeftAlt) && !kbO.IsKeyDown(Keys.LeftAlt))
-                restart();//This is to test what you are working on in multiple levels. (Secret skip button)
+                updateLevel();//This is to test what you are working on in multiple levels. (Secret skip button)
 
             //player movement logic
             if (kb.IsKeyDown(Keys.W))
@@ -158,19 +136,19 @@ namespace Centipede
                 player.fire();
 
             if (player.isFiring)
-                score+=player.updateProj(mushrooms);
+                score += player.updateProj(level.mushrooms);
 
             
 
 
             //Centipede cleaning
-            //foreach (Centipede c in centipedes)
-            //{
-            //    if (c.size() == 0)
-            //    {
-            //        centipedes.Remove(c);
-            //    }
-            //}
+            /* We don't currently add centipedes
+            foreach (Centipede c in centipedes) {
+                if (c.size() == 0) {
+                    centipedes.Remove(c);
+                }
+            }
+            */
 
             kbO = kb;
             base.Update(gameTime);
@@ -182,14 +160,12 @@ namespace Centipede
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(backgroundColor);
+            GraphicsDevice.Clear(level.backgroundColor);
             spriteBatch.Begin();
             player.draw(spriteBatch, gameTime);
-            for (int x = 0; x < mushrooms.GetLength(0); x++)
-            {
-                for (int y = 0; y < mushrooms.GetLength(0); y++)
-                {
-                    mushrooms[x, y].Draw(spriteBatch, gameTime);
+            for (int x = 0; x < level.mushrooms.GetLength(0); x++) {
+                for (int y = 0; y < level.mushrooms.GetLength(0); y++) {
+                    level.mushrooms[x, y].Draw(spriteBatch, gameTime);
                 }
             }
             spriteBatch.End();
@@ -199,71 +175,13 @@ namespace Centipede
 
             base.Draw(gameTime);
         }
-        public int checkArray(Mushroom[,] z)
-        {
-            int total = 0;
-            for(int x=0; x<z.GetLength(0);x++)
-            {
-                for (int y = 0; y < z.GetLength(0); y++)
-                {
-                    if (z[x, y] == null)
-                        continue;
-                    if (z[x,y].visible == true)
-                        total++;
-                }
-
-            }
-            return total;
-        }
 
         // TODO: Once we introduce Centipede speed, also update that here as well
         public void updateLevel() {
-            if (level <= 15)
-                level += 1;
-
-            backgroundColor = Globals.backgroundColors[level % Globals.backgroundColors.Length];
+            level = new Level(level.id);
         }
 
-        public void restart()
-        {
-            updateLevel();
-            for (int a = 0; a < mushrooms.GetLength(0); a++)
-            {
-                for (int b = 0; b < mushrooms.GetLength(0); b++)
-                {
-                    mushrooms[a, b].visible = false;
-                }
-            }
-                while (checkArray(mushrooms) < level * 10)
-                {
-                bool check = false;
-                int x = rng.Next(30);
-                int y = rng.Next(30);
-                if(x-1>=0)
-                {
-                    if (y - 1 >= 0)
-                        if (mushrooms[x - 1, y - 1].visible == true)
-                            check = true;
-                    if (y + 1 < mushrooms.GetLength(0))
-                        if (mushrooms[x - 1, y + 1].visible == true)
-                            check = true;
-                }
-
-                if (x + 1 < mushrooms.GetLength(0))
-                {
-                    if (y - 1 >= 0)
-                        if (mushrooms[x + 1, y - 1].visible == true)
-                            check = true;
-                    if (y + 1 < mushrooms.GetLength(0))
-                        if (mushrooms[x + 1, y + 1].visible == true)
-                            check = true;
-                }
-                if (check==false)
-                mushrooms[x, y].generate();
-            }
-        }
-        public bool Collision(Player pc, int direction)
-        {
+        public bool Collision(Player pc, int direction) {
             Rectangle one = pc.getRec();
             int oneCx = one.X + (one.Width / 2);
             int oneCy = one.Y + (one.Height / 2);
@@ -274,11 +192,10 @@ namespace Centipede
             check[2] = false;
             check[3] = false;
 
-            foreach (Mushroom m in mushrooms)
-            {
-                 int centerX = m.loc.X + (m.loc.Width / 2);
-                int centerY = m.loc.Y + (m.loc.Height/2);
-                if (one.Intersects(m.loc) && centerY < oneCy&&m.visible)//Top
+            foreach (Mushroom m in level.mushrooms) {
+                int centerX = m.loc.X + (m.loc.Width / 2);
+                int centerY = m.loc.Y + (m.loc.Height / 2);
+                if (one.Intersects(m.loc) && centerY < oneCy && m.visible)//Top
                     check[0] = true;
                 if (one.Intersects(m.loc) && centerY > oneCy && m.visible)//Bottom
                     check[1] = true;
