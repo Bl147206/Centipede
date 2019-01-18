@@ -17,21 +17,28 @@ namespace Centipede
         Rectangle[] body;
         Texture2D[] head;
         Texture2D[] bodyTex;
-        Vector4 bounds;
+        int topBound, rightBound, bottomBound, leftBound;
         int velocity;
 
-        public Centipede(int length,int velocity,int left, int right,int top,int bottom)
+        public Centipede(int length, int velocity, int left, int right, int top, int bottom)
         {
             body = new Rectangle[length];
             this.velocity = velocity;
-            bounds = new Vector4(left, right, top, bottom);
+            topBound = top;
+            rightBound = right;
+            bottomBound = bottom;
+            leftBound = left;
+            buildSnake();
         }
 
         public Centipede(Rectangle[] body, int velocity, int left, int right, int top, int bottom)
         {
             this.body = body;
             this.velocity = velocity;
-            bounds = new Vector4(left, right, top, bottom);
+            topBound = top;
+            rightBound = right;
+            bottomBound = bottom;
+            leftBound = left;
         }
 
         public void setTextures(Texture2D[] h, Texture2D[] b)
@@ -40,14 +47,24 @@ namespace Centipede
             bodyTex = b;
         }
 
+        public void buildSnake()
+        {
+            body[0] = new Rectangle(290,40,20,20);
+        }
+
         public void Update()
         {
-            for (int i = 0; i < body.Length; i++)
+            //snakes follow one another
+            for(int segment = body.Length-1; segment > 0; segment--)
             {
-                body[i].X += velocity;
+                body[segment] = body[segment - 1];
             }
-            if (body[0].X < bounds.X || body[0].X > bounds.Y)
+            body[0].X += velocity;
+            if(body[0].X < leftBound || body[0].X > rightBound)
+            {
                 velocity *= -1;
+                body[0].Y += 20;
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
@@ -86,7 +103,6 @@ namespace Centipede
         {
             return body.Length;
         }
-
 
     }
 }

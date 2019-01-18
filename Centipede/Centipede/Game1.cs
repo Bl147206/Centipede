@@ -27,6 +27,7 @@ namespace Centipede
         LinkedList<Centipede> centipedes;
         Texture2D[] mushTexts;
         Texture2D img;//Use this texture if you want to test the visuals. We need to delete this before we submit project.
+        Texture2D[] testImg;
         Texture2D none;
         Player player;
         Random rng;
@@ -60,6 +61,7 @@ namespace Centipede
             level = 0;
             kbO = Keyboard.GetState();
             score = 0;
+            centipedes = new LinkedList<Centipede>();
   
             for(int x=0; x< mushrooms.GetLength(0); x++)
             {
@@ -68,9 +70,15 @@ namespace Centipede
                     mushrooms[x, y] = new Mushroom(new Rectangle(x * 20, y * 20 + 40, 20, 20));
                 }
             }
+
             restart();
             player = new Player(null,null, new Rectangle(0, GraphicsDevice.Viewport.Height - 20, 20, 20),
                 GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+
+            testImg = new Texture2D[10];
+
+            centipedes.AddFirst(new Centipede(15,-5,1,1,1,1));
+            centipedes.ElementAt(0).setTextures(testImg, testImg);
 
             base.Initialize();
         }
@@ -94,6 +102,11 @@ namespace Centipede
                 {
                     mushrooms[x, y].setTex(mushTexts);
                 }
+            }
+
+            for(int i = 0; i < testImg.Length; i++)
+            {
+                testImg[i] = img;
             }
             
             player.setTex(Content.Load<Texture2D>("graphicstest"));
@@ -153,14 +166,14 @@ namespace Centipede
             if (player.isFiring)
                 player.updateProj(mushrooms);
 
-
-            //Centipede cleaning
+            //Centipede stuff
             foreach(Centipede c in centipedes)
             {
                 if(c.size() == 0)
                 {
                     centipedes.Remove(c);
                 }
+                c.Update();
             }
 
             kbO = kb;
@@ -176,6 +189,10 @@ namespace Centipede
             GraphicsDevice.Clear(backgroundColor);
             spriteBatch.Begin();
             player.draw(spriteBatch, gameTime);
+            foreach(Centipede c in centipedes)
+            {
+                c.Draw(spriteBatch,gameTime);
+            }
             for (int x = 0; x < mushrooms.GetLength(0); x++)
             {
                 for (int y = 0; y < mushrooms.GetLength(0); y++)
