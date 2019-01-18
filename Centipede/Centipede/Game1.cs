@@ -55,8 +55,9 @@ namespace Centipede
             rng = new Random();
             level = 0;
             kbO = Keyboard.GetState();
-  
-            for(int x=0; x< mushrooms.GetLength(0); x++)
+
+
+            for (int x=0; x< mushrooms.GetLength(0); x++)
             {
                 for(int y=0; y< mushrooms.GetLength(0); y++)
                 {
@@ -127,19 +128,23 @@ namespace Centipede
             //player movement logic
             if (kb.IsKeyDown(Keys.W))
             {
-                player.moveUp();
+                if (!Collision(player, 0))
+                    player.moveUp();
             }
             if (kb.IsKeyDown(Keys.A))
             {
-                player.moveLeft();
+                if (!Collision(player, 2))
+                    player.moveLeft();
             }
             if (kb.IsKeyDown(Keys.D))
             {
-                player.moveRight();
+                if (!Collision(player, 3))
+                    player.moveRight();
             }
             if (kb.IsKeyDown(Keys.S))
             {
-                player.moveDown();
+                if (!Collision(player, 1))
+                    player.moveDown();
             }
 
             if (kb.IsKeyDown(Keys.Space) && !player.isFiring)
@@ -238,23 +243,33 @@ namespace Centipede
                 mushrooms[x, y].generate();
             }
         }
-        public bool[] Collision(Player pc)
+        public bool Collision(Player pc, int direction)
         {
             Rectangle one = pc.getRec();
-            int indexU= (one.Y-pc.speedY)/20;
-            int indexD=(one.Y + pc.speedY)/20;
-            int indexL = (one.X - pc.speedX)/20;
-            int indexR = (one.Y + pc.speedY)/20;
-            bool[] check = new bool[4];//Boolean Order: Up, Down, Left, Right
-            if (mushrooms[one.X/20, indexU].visible == true)
-                check[0] = true;
-            if (mushrooms[one.X/20, indexD].visible == true)
-                check[1] = true;
-            if (mushrooms[indexL, one.Y/20].visible == true)
-                check[2] = true;
-            if (mushrooms[indexR + 1, one.Y/20].visible == true)
-                check[3] = true;
-            return check;
+            int oneCx = one.X + (one.Width / 2);
+            int oneCy = one.Y + (one.Height / 2);
+
+            bool[] check = new bool[4];//Boolean Order: Top, Bottom, Left, Right
+            check[0] = false;
+            check[1] = false;
+            check[2] = false;
+            check[3] = false;
+
+            foreach (Mushroom m in mushrooms)
+            {
+                 int centerX = m.loc.X + (m.loc.Width / 2);
+                int centerY = m.loc.Y + (m.loc.Height/2);
+                if (one.Intersects(m.loc) && centerY < oneCy&&m.visible)//Top
+                    check[0] = true;
+                if (one.Intersects(m.loc) && centerY > oneCy && m.visible)//Bottom
+                    check[1] = true;
+                if (one.Intersects(m.loc) && centerX < oneCx && m.visible)//Left
+                    check[2] = true;
+                if (one.Intersects(m.loc) && centerX > oneCx && m.visible)//Right
+                    check[3] = true;
+            }
+            bool final = check[direction];
+            return final;
         }
     }
 
