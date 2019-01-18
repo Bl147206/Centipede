@@ -15,10 +15,13 @@ namespace Centipede
     /// <summary>
     /// This is the main type for your game
     /// </summary>
+    
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+
+        int score;
 
         Mushroom[,] mushrooms;
         LinkedList<Centipede> centipedes;
@@ -56,6 +59,7 @@ namespace Centipede
             rng = new Random();
             level = 0;
             kbO = Keyboard.GetState();
+            score = 0;
   
             for(int x=0; x< mushrooms.GetLength(0); x++)
             {
@@ -252,11 +256,19 @@ namespace Centipede
         public bool[] Collision(Player pc)
         {
             Rectangle one = pc.getRec();
-            int indexX;
-            int indexY; 
+            int indexU= (one.Y-pc.speedY)/20;
+            int indexD=(one.Y + pc.speedY)/20;
+            int indexL = (one.X - pc.speedX)/20;
+            int indexR = (one.Y + pc.speedY)/20;
             bool[] check = new bool[4];//Boolean Order: Up, Down, Left, Right
-            for (int z = 0; z < check.Length; z++)
-                check[z] = false;
+            if (mushrooms[one.X/20, indexU].visible == true)
+                check[0] = true;
+            if (mushrooms[one.X/20, indexD].visible == true)
+                check[1] = true;
+            if (mushrooms[indexL, one.Y/20].visible == true)
+                check[2] = true;
+            if (mushrooms[indexR + 1, one.Y/20].visible == true)
+                check[3] = true;
             return check;
         }
     }

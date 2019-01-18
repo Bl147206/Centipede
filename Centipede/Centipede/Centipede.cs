@@ -13,6 +13,7 @@ namespace Centipede
 {
     class Centipede
     {
+        
         Rectangle[] body;
         Texture2D[] head;
         Texture2D[] bodyTex;
