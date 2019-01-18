@@ -160,10 +160,10 @@ namespace Centipede
             Console.WriteLine(score);
 
 
-            //Centipede cleaning
-            foreach(Centipede c in centipedes)
+            Centipede cleaning;
+            foreach (Centipede c in centipedes)
             {
-                if(c.size() == 0)
+                if (c.size() == 0)
                 {
                     centipedes.Remove(c);
                 }
