@@ -16,7 +16,7 @@ namespace Centipede
 
         Texture2D playerTex;
         Rectangle playerRec;
-        bool isFiring;
+        public bool isFiring;
         Rectangle proj;
         Texture2D projTex;
 
@@ -58,6 +58,11 @@ namespace Centipede
         {
             this.playerTex = playerTex;
             
+        }
+
+        public void setProjTex(Texture2D projTex)
+        {
+            this.projTex = projTex;
         }
 
         //movement methods
@@ -109,16 +114,24 @@ namespace Centipede
         {
             if (!isFiring)
             {
-                proj = new Rectangle(playerRec.X, playerRec.Y, 1, 3);
+                proj = new Rectangle(playerRec.X+(playerRec.Width/2)-2, playerRec.Y, 4, 12);
                 isFiring = true;
             }
         }
 
-        public void updateProj()
+        public void updateProj(Mushroom[,] mushrooms)
         {
-            proj.Y++;
+            proj.Y-=5;
             if (proj.Y < 0)
                 isFiring = false;
+            foreach(Mushroom m in mushrooms)
+            {
+                if (proj.Intersects(m.loc) && m.visible)
+                {
+                    isFiring = false;
+                    m.hit();
+                }
+            }
         }
 
         //draw method

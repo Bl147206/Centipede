@@ -51,7 +51,7 @@ namespace Centipede
         {
             // TODO: Add your initialization logic here
             mushrooms = new Mushroom[30,30];
-            mushTexts = new Texture2D[2];
+            mushTexts = new Texture2D[3];
             rng = new Random();
             level = 0;
             kbO = Keyboard.GetState();
@@ -64,7 +64,7 @@ namespace Centipede
                 }
             }
             restart();
-            player = new Player(null, new Rectangle(0, GraphicsDevice.Viewport.Height - 20, 20, 20),
+            player = new Player(null,null, new Rectangle(0, GraphicsDevice.Viewport.Height - 20, 20, 20),
                 GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
 
             base.Initialize();
@@ -81,7 +81,8 @@ namespace Centipede
             img = Content.Load<Texture2D>("graphicsTest");
             none = Content.Load<Texture2D>("blank");
             mushTexts[0] = img;
-            mushTexts[1] = none;
+            mushTexts[1] = Content.Load<Texture2D>("dmg1");
+            mushTexts[2] = Content.Load<Texture2D>("dmg2");
             for (int x = 0; x < mushrooms.GetLength(0); x++)
             {
                 for (int y = 0; y < mushrooms.GetLength(0); y++)
@@ -91,6 +92,7 @@ namespace Centipede
             }
             
             player.setTex(Content.Load<Texture2D>("graphicstest"));
+            player.setProjTex(Content.Load<Texture2D>("graphicstest"));
 
             // TODO: use this.Content to load your game content here
 
@@ -139,6 +141,12 @@ namespace Centipede
             {
                 player.moveDown();
             }
+
+            if (kb.IsKeyDown(Keys.Space) && !player.isFiring)
+                player.fire();
+
+            if (player.isFiring)
+                player.updateProj(mushrooms);
 
             kbO = kb;
             base.Update(gameTime);
