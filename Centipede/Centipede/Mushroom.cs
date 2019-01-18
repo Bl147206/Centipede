@@ -42,6 +42,8 @@ namespace Centipede
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
             // FIXME: When we introduce projectiles and mushroom hits update this to reflect new mushroom textures
+            if (!visible) return;
+
             spriteBatch.Draw(Globals.mushroom0, loc, Color.White);
         }
     }

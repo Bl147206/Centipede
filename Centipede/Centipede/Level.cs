@@ -15,44 +15,32 @@ namespace Centipede {
         public int id;
         public Mushroom[,] mushrooms;
         LinkedList<Centipede> centipedes;
-        Random rng;
         public Color backgroundColor;
 
-        public Level() {
-            initialize();
+        public Level(int previousId = 0) {
+            initialize(previousId);
         }
 
-        public Level(int previousId) {
-            initialize();
-
-            // update id based on previous level
+        void initialize(int previousId = 0) {
             id = previousId + 1;
+            mushrooms = new Mushroom[30, 30];
+
+            mushroomInit();
+
+            backgroundColor = Globals.backgroundColors[id % Globals.backgroundColors.Length];
         }
 
-        void initialize() {
-            id = 0;
-            mushrooms = new Mushroom[30, 30];
-            rng = new Random();
-
+        void mushroomInit() {
             for (int x = 0; x < mushrooms.GetLength(0); x++) {
                 for (int y = 0; y < mushrooms.GetLength(0); y++) {
                     mushrooms[x, y] = new Mushroom(new Rectangle(x * 20, y * 20 + 40, 20, 20));
                 }
             }
 
-            backgroundColor = Globals.backgroundColors[id % Globals.backgroundColors.Length];
-        }
-
-        void mushroomInit() {
-            for (int a = 0; a < mushrooms.GetLength(0); a++) {
-                for (int b = 0; b < mushrooms.GetLength(0); b++) {
-                    mushrooms[a, b].visible = false;
-                }
-            }
-            while (checkArray(mushrooms) < id * 10) {
+            while (checkArray() < id * 10) {
                 bool check = false;
-                int x = rng.Next(30);
-                int y = rng.Next(30);
+                int x = Globals.rng.Next(30);
+                int y = Globals.rng.Next(30);
                 if (x - 1 >= 0) {
                     if (y - 1 >= 0)
                         if (mushrooms[x - 1, y - 1].visible == true)
@@ -73,6 +61,18 @@ namespace Centipede {
                 if (check == false)
                     mushrooms[x, y].generate();
             }
+        }
+
+        public int checkArray() {
+            int total = 0;
+            for (int x = 0; x < mushrooms.GetLength(0); x++) {
+                for (int y = 0; y < mushrooms.GetLength(0); y++) {
+                    if (mushrooms[x, y].visible == true)
+                        total += 1;
+                }
+
+            }
+            return total;
         }
     }
 }

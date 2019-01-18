@@ -98,7 +98,7 @@ namespace Centipede
             // TODO: Add your update logic here
 
             if (kb.IsKeyDown(Keys.LeftAlt) && !kbO.IsKeyDown(Keys.LeftAlt))
-                restart();//This is to test what you are working on in multiple levels. (Secret skip button)
+                updateLevel();//This is to test what you are working on in multiple levels. (Secret skip button)
 
             //player movement logic
             if (kb.IsKeyDown(Keys.W))
@@ -122,7 +122,7 @@ namespace Centipede
                 player.fire();
 
             if (player.isFiring)
-                player.updateProj(mushrooms);
+                player.updateProj(level.mushrooms);
 
             kbO = kb;
             base.Update(gameTime);
@@ -137,11 +137,11 @@ namespace Centipede
             GraphicsDevice.Clear(level.backgroundColor);
             spriteBatch.Begin();
             player.draw(spriteBatch, gameTime);
-            for (int x = 0; x < mushrooms.GetLength(0); x++)
+            for (int x = 0; x < level.mushrooms.GetLength(0); x++)
             {
-                for (int y = 0; y < mushrooms.GetLength(0); y++)
+                for (int y = 0; y < level.mushrooms.GetLength(0); y++)
                 {
-                    mushrooms[x, y].Draw(spriteBatch, gameTime);
+                    level.mushrooms[x, y].Draw(spriteBatch, gameTime);
                 }
             }
             spriteBatch.End();
@@ -150,22 +150,6 @@ namespace Centipede
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
-        }
-        public int checkArray(Mushroom[,] z)
-        {
-            int total = 0;
-            for(int x=0; x<z.GetLength(0);x++)
-            {
-                for (int y = 0; y < z.GetLength(0); y++)
-                {
-                    if (z[x, y] == null)
-                        continue;
-                    if (z[x,y].visible == true)
-                        total++;
-                }
-
-            }
-            return total;
         }
 
         // TODO: Once we introduce Centipede speed, also update that here as well
@@ -181,13 +165,13 @@ namespace Centipede
             int indexL = (one.X - pc.speedX) / 20;
             int indexR = (one.Y + pc.speedY) / 20;
             bool[] check = new bool[4];//Boolean Order: Up, Down, Left, Right
-            if (mushrooms[one.X / 20, indexU].visible == true)
+            if (level.mushrooms[one.X / 20, indexU].visible == true)
                 check[0] = true;
-            if (mushrooms[one.X / 20, indexD].visible == true)
+            if (level.mushrooms[one.X / 20, indexD].visible == true)
                 check[1] = true;
-            if (mushrooms[indexL, one.Y / 20].visible == true)
+            if (level.mushrooms[indexL, one.Y / 20].visible == true)
                 check[2] = true;
-            if (mushrooms[indexR + 1, one.Y / 20].visible == true)
+            if (level.mushrooms[indexR + 1, one.Y / 20].visible == true)
                 check[3] = true;
             return check;
         }
