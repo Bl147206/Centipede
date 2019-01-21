@@ -54,17 +54,12 @@ namespace Centipede
             // TODO: Add your initialization logic here
             kbO = Keyboard.GetState();
             score = 0;
+            level = new Level();
             centipedes = new LinkedList<Centipede>();
-  
-            for(int x=0; x< mushrooms.GetLength(0); x++)
-            {
-                for(int y=0; y< mushrooms.GetLength(0); y++)
-                {
-                    mushrooms[x, y] = new Mushroom(new Rectangle(x * 20, y * 20 + 40, 20, 20));
-                }
-            }
+            level.initialize();
+            level.mushroomInit();
 
-            restart();
+            updateLevel();
             player = new Player(null,null, new Rectangle(0, GraphicsDevice.Viewport.Height - 20, 20, 20),
                 GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
 
@@ -83,16 +78,6 @@ namespace Centipede
             spriteBatch = new SpriteBatch(GraphicsDevice);
             img = Content.Load<Texture2D>("graphicsTest");
             none = Content.Load<Texture2D>("blank");
-            mushTexts[0] = img;
-            mushTexts[1] = Content.Load<Texture2D>("dmg1");
-            mushTexts[2] = Content.Load<Texture2D>("dmg2");
-            for (int x = 0; x < mushrooms.GetLength(0); x++)
-            {
-                for (int y = 0; y < mushrooms.GetLength(0); y++)
-                {
-                    mushrooms[x, y].setTex(mushTexts);
-                }
-            }
             
             player.setTex(Content.Load<Texture2D>("graphicstest"));
             player.setProjTex(Content.Load<Texture2D>("graphicstest"));
@@ -167,7 +152,7 @@ namespace Centipede
                 }
                 c.Update();
             }
-            */
+            
 
             kbO = kb;
             base.Update(gameTime);
@@ -182,11 +167,11 @@ namespace Centipede
             GraphicsDevice.Clear(level.backgroundColor);
             spriteBatch.Begin();
             player.draw(spriteBatch, gameTime);
-            for (int x = 0; x < mushrooms.GetLength(0); x++)
+            for (int x = 0; x < level.mushrooms.GetLength(0); x++)
             {
-                for (int y = 0; y < mushrooms.GetLength(0); y++)
+                for (int y = 0; y < level.mushrooms.GetLength(0); y++)
                 {
-                    mushrooms[x, y].Draw(spriteBatch, gameTime);
+                    level.mushrooms[x, y].Draw(spriteBatch, gameTime);
                 }
             }
             spriteBatch.End();

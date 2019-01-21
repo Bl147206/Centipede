@@ -21,7 +21,7 @@ namespace Centipede {
             initialize(previousId);
         }
 
-        void initialize(int previousId = 0) {
+        public void initialize(int previousId = 0) {
             id = previousId + 1;
             mushrooms = new Mushroom[30, 30];
 
@@ -30,7 +30,7 @@ namespace Centipede {
             backgroundColor = Globals.backgroundColors[id % Globals.backgroundColors.Length];
         }
 
-        void mushroomInit() {
+        public void mushroomInit() {
             for (int x = 0; x < mushrooms.GetLength(0); x++) {
                 for (int y = 0; y < mushrooms.GetLength(0); y++) {
                     mushrooms[x, y] = new Mushroom(new Rectangle(x * 20, y * 20 + 40, 20, 20));
