@@ -32,6 +32,7 @@ namespace Centipede
         SpriteFont font;
         SpriteFont titleFont;
         bool hasGameStarted = false;
+        bool gameOver = false;
 
         public Game1()
         {
@@ -113,6 +114,14 @@ namespace Centipede
 
                 return;
             }
+            if (gameOver)
+            {
+                if (kb.IsKeyDown(Keys.Enter) && !kbO.IsKeyDown(Keys.Enter))
+                {
+                    gameOver = false;
+                    reset();
+                }
+            }
 
             if (kb.IsKeyDown(Keys.LeftAlt) && !kbO.IsKeyDown(Keys.LeftAlt))
                 updateLevel();//This is to test what you are working on in multiple levels. (Secret skip button)
@@ -144,6 +153,8 @@ namespace Centipede
 
             if (player.isFiring)
                 score += player.updateProj(level.mushrooms);
+            if (kb.IsKeyDown(Keys.I) && kbO.IsKeyDown(Keys.I))
+                gameOver = true;
 
             
 
@@ -171,31 +182,36 @@ namespace Centipede
         {
             GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
-
-            // If the game hasn't started yet, lets show them the title screen.
-            if (!hasGameStarted) {
-
-                spriteBatch.DrawString(titleFont, "Centipede", new Vector2(125, 100), Color.White);
-                spriteBatch.DrawString(font, "Move around with W, A, S, and D", new Vector2(125, 300), Color.White);
-                spriteBatch.DrawString(font, "Press Spacebar to shoot mushrooms and the Centipede!", new Vector2(25, 400), Color.White);
-                spriteBatch.DrawString(font, "Press Enter to start!", new Vector2(175, 500), Color.White);
-
-                // Ensure that we end the sprite thing as well.
-                spriteBatch.End();
-                return;
-            }
-
-            player.draw(spriteBatch, gameTime);
-            for (int x = 0; x < level.mushrooms.GetLength(0); x++)
+            if (!gameOver)
             {
-                for (int y = 0; y < level.mushrooms.GetLength(0); y++)
+                // If the game hasn't started yet, lets show them the title screen.
+                if (!hasGameStarted)
                 {
-                    level.mushrooms[x, y].Draw(spriteBatch, gameTime);
-                }
-            }
 
-            spriteBatch.DrawString(font1, "Score: " + score, new Vector2(0, 0), Color.White);
-            spriteBatch.DrawString(font1, "Level: " + visualLevel, new Vector2(450, 0), Color.White);
+                    spriteBatch.DrawString(titleFont, "Centipede", new Vector2(125, 100), Color.White);
+                    spriteBatch.DrawString(font, "Move around with W, A, S, and D", new Vector2(125, 300), Color.White);
+                    spriteBatch.DrawString(font, "Press Spacebar to shoot mushrooms and the Centipede!", new Vector2(25, 400), Color.White);
+                    spriteBatch.DrawString(font, "Press Enter to start!", new Vector2(175, 500), Color.White);
+
+                    // Ensure that we end the sprite thing as well.
+                    spriteBatch.End();
+                    return;
+                }
+
+                player.draw(spriteBatch, gameTime);
+                for (int x = 0; x < level.mushrooms.GetLength(0); x++)
+                {
+                    for (int y = 0; y < level.mushrooms.GetLength(0); y++)
+                    {
+                        level.mushrooms[x, y].Draw(spriteBatch, gameTime);
+                    }
+                }
+
+                spriteBatch.DrawString(font1, "Score: " + score, new Vector2(0, 0), Color.White);
+                spriteBatch.DrawString(font1, "Level: " + visualLevel, new Vector2(450, 0), Color.White);
+            }
+            else
+                spriteBatch.DrawString(font1, "Game Over", new Vector2(250, 300), Color.White);
             spriteBatch.End();
 
 
@@ -242,6 +258,7 @@ namespace Centipede
         {
             visualLevel = 1;
             level = new Level(Color.White);
+            hasGameStarted = false;
 
         }
 
