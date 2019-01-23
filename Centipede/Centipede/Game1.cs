@@ -203,6 +203,10 @@ namespace Centipede
                 }
             }
 
+            spriteBatch.DrawString(font1, "High Score: " + (score > highScore ? score : highScore), new Vector2(0, 0), Color.White);
+            spriteBatch.DrawString(font1, "Score: " + score, new Vector2(200, 0), Color.White);
+            spriteBatch.DrawString(font1, "Level: " + visualLevel, new Vector2(450, 0), Color.White);
+
             foreach (Centipede c in centipedes)
             {
                 c.Draw(spriteBatch,gameTime);
