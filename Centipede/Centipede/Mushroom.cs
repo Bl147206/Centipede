@@ -17,12 +17,14 @@ namespace Centipede
         public Rectangle loc;
         int damage;
         public bool visible;
+        Color levelC;
 
-        public Mushroom(Rectangle l)
+        public Mushroom(Rectangle l, Color levelColor)
         {
             loc = l;
             damage = 0;
             visible = false;
+            levelC = levelColor;
         }
 
         public void generate()
@@ -41,6 +43,7 @@ namespace Centipede
             }
             return false;
         }
+
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
@@ -65,7 +68,7 @@ namespace Centipede
                     return;
             }
 
-            spriteBatch.Draw(mushroomTexture, loc, Color.White);
+            spriteBatch.Draw(mushroomTexture, loc, levelC);
         }
     }
 }

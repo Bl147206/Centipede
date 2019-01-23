@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
 namespace Centipede {
-    class Level {
+    public class Level {
         public int id;
         public Mushroom[,] mushrooms;
         LinkedList<Centipede> centipedes;
@@ -25,15 +25,16 @@ namespace Centipede {
             id = previousId + 1;
             mushrooms = new Mushroom[30, 30];
 
-            mushroomInit();
+
 
             backgroundColor = Globals.backgroundColors[id % Globals.backgroundColors.Length];
+            mushroomInit();
         }
 
         public void mushroomInit() {
             for (int x = 0; x < mushrooms.GetLength(0); x++) {
                 for (int y = 0; y < mushrooms.GetLength(0); y++) {
-                    mushrooms[x, y] = new Mushroom(new Rectangle(x * 20, y * 20 + 40, 20, 20));
+                    mushrooms[x, y] = new Mushroom(new Rectangle(x * 20, y * 20 + 40, 20, 20),backgroundColor);
                 }
             }
 

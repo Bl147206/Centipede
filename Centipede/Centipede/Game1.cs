@@ -21,13 +21,8 @@ namespace Centipede
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-
         int score;
-
         LinkedList<Centipede> centipedes;
-        Texture2D img;//Use this texture if you want to test the visuals. We need to delete this before we submit project.
-        Texture2D[] testImg;
-        Texture2D none;
         Player player;
         KeyboardState kb;
         KeyboardState kbO;
@@ -56,12 +51,10 @@ namespace Centipede
             score = 0;
             level = new Level();
             centipedes = new LinkedList<Centipede>();
-            level.initialize();
-            level.mushroomInit();
+
 
             updateLevel();
-            player = new Player(null,null, new Rectangle(0, GraphicsDevice.Viewport.Height - 20, 20, 20),
-                GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+
 
             level = new Level();
 
@@ -76,11 +69,16 @@ namespace Centipede
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            img = Content.Load<Texture2D>("graphicsTest");
-            none = Content.Load<Texture2D>("blank");
-            
-            player.setTex(Content.Load<Texture2D>("graphicstest"));
+            level.initialize();
+            level.mushroomInit();
+            player = new Player(null, null, new Rectangle(0, GraphicsDevice.Viewport.Height - 20, 20, 20),
+            GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, level.backgroundColor);
+            player.setTex(Content.Load<Texture2D>("playerSprite"));
             player.setProjTex(Content.Load<Texture2D>("graphicstest"));
+            Globals.mushroom0 = Content.Load<Texture2D>("mushroom0");
+            Globals.mushroom1 = Content.Load<Texture2D>("mushroom1");
+            Globals.mushroom2 = Content.Load<Texture2D>("mushroom2");
+
 
             // TODO: use this.Content to load your game content here
 
@@ -152,8 +150,8 @@ namespace Centipede
                 }
                 c.Update();
             }
-            
 
+            player.changeColor(level.backgroundColor);
             kbO = kb;
             base.Update(gameTime);
         }
@@ -164,7 +162,7 @@ namespace Centipede
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(level.backgroundColor);
+            GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
             player.draw(spriteBatch, gameTime);
             for (int x = 0; x < level.mushrooms.GetLength(0); x++)

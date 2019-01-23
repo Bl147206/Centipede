@@ -19,8 +19,9 @@ namespace Centipede
         public bool isFiring;
         Rectangle proj;
         Texture2D projTex;
+        Color pColor;
 
-        public Player(Texture2D playerTex,Texture2D projTex, Rectangle playerRec, int rightEdge, int bottomEdge)
+        public Player(Texture2D playerTex,Texture2D projTex, Rectangle playerRec, int rightEdge, int bottomEdge, Color levelColor)
         {
             this.playerTex = playerTex;
             this.playerRec = playerRec;
@@ -29,6 +30,7 @@ namespace Centipede
             isFiring = false;
             proj = new Rectangle();
             this.projTex = projTex;
+            pColor = levelColor;
         }
 
         public Player(Texture2D playerTex, Rectangle playerRec)
@@ -119,6 +121,11 @@ namespace Centipede
             }
         }
 
+        public void changeColor(Color newColor)
+        {
+            pColor = newColor;
+        }
+
         public int updateProj(Mushroom[,] mushrooms)
         {
             proj.Y-=10;
@@ -140,9 +147,9 @@ namespace Centipede
 
         public void draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            spriteBatch.Draw(playerTex, playerRec, Color.White);
+            spriteBatch.Draw(playerTex, playerRec, pColor);
             if (isFiring)
-                spriteBatch.Draw(projTex, proj, Color.White);
+                spriteBatch.Draw(projTex, proj, pColor);
             
         }
 
