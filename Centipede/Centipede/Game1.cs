@@ -238,6 +238,13 @@ namespace Centipede
             bool final = check[direction];
             return final;
         }
+        public void reset()
+        {
+            visualLevel = 1;
+            level = new Level(Color.White);
+
+        }
+
     }
 
 }
