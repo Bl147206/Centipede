@@ -27,6 +27,9 @@ namespace Centipede
         KeyboardState kb;
         KeyboardState kbO;
         Level level;
+        SpriteFont font;
+        SpriteFont titleFont;
+        bool hasGameStarted = false;
 
         public Game1()
         {
@@ -52,10 +55,6 @@ namespace Centipede
             level = new Level();
             centipedes = new LinkedList<Centipede>();
 
-
-            updateLevel();
-
-
             level = new Level();
 
             base.Initialize();
@@ -78,7 +77,8 @@ namespace Centipede
             Globals.mushroom0 = Content.Load<Texture2D>("mushroom0");
             Globals.mushroom1 = Content.Load<Texture2D>("mushroom1");
             Globals.mushroom2 = Content.Load<Texture2D>("mushroom2");
-
+            font = Content.Load<SpriteFont>("SpriteFont1");
+            titleFont = Content.Load<SpriteFont>("SpriteFont2");
 
             // TODO: use this.Content to load your game content here
 
@@ -105,7 +105,13 @@ namespace Centipede
                 this.Exit();
             kb = Keyboard.GetState();
 
-            // TODO: Add your update logic here
+            if (!hasGameStarted) {
+                if (kb.IsKeyDown(Keys.Enter) && !kbO.IsKeyDown(Keys.Enter)) {
+                    hasGameStarted = true;
+                }
+
+                return;
+            }
 
             if (kb.IsKeyDown(Keys.LeftAlt) && !kbO.IsKeyDown(Keys.LeftAlt))
                 updateLevel();//This is to test what you are working on in multiple levels. (Secret skip button)
@@ -164,6 +170,20 @@ namespace Centipede
         {
             GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
+
+            // If the game hasn't started yet, lets show them the title screen.
+            if (!hasGameStarted) {
+
+                spriteBatch.DrawString(titleFont, "Centipede", new Vector2(125, 100), Color.White);
+                spriteBatch.DrawString(font, "Move around with W, A, S, and D", new Vector2(125, 300), Color.White);
+                spriteBatch.DrawString(font, "Press Spacebar to shoot mushrooms and the Centipede!", new Vector2(25, 400), Color.White);
+                spriteBatch.DrawString(font, "Press Enter to start!", new Vector2(175, 500), Color.White);
+
+                // Ensure that we end the sprite thing as well.
+                spriteBatch.End();
+                return;
+            }
+
             player.draw(spriteBatch, gameTime);
             for (int x = 0; x < level.mushrooms.GetLength(0); x++)
             {
