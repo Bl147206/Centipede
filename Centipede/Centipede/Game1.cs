@@ -32,7 +32,8 @@ namespace Centipede
         SpriteFont font;
         SpriteFont titleFont;
         bool hasGameStarted = false;
-        bool gameOver = false;
+        public Spider spider;
+        int highScore;
 
         public Game1()
         {
@@ -55,10 +56,15 @@ namespace Centipede
             // TODO: Add your initialization logic here
             kbO = Keyboard.GetState();
             score = 0;
+            highScore = getHighScore();
             visualLevel = 1;
             centipedes = new LinkedList<Centipede>();
 
             level = new Level(Color.White);
+            
+
+            centipedes.AddFirst(new Centipede(10, 2, 0, GraphicsDevice.Viewport.Width, 100, GraphicsDevice.Viewport.Height - 40));
+            
 
             base.Initialize();
         }
@@ -80,6 +86,8 @@ namespace Centipede
             Globals.mushroom2 = Content.Load<Texture2D>("mushroom2");
             font = Content.Load<SpriteFont>("SpriteFont1");
             titleFont = Content.Load<SpriteFont>("SpriteFont2");
+
+            spider = new Spider(new Texture2D[] {Content.Load<Texture2D>("spider0"),Content.Load<Texture2D>("spider1") },GraphicsDevice.Viewport.Height-(Player.top*2),GraphicsDevice.Viewport.Height-20,level.backgroundColor,Globals.rng.Next(1,3));
 
             // TODO: use this.Content to load your game content here
             font1 = this.Content.Load<SpriteFont>("SpriteFont1");
@@ -155,6 +163,7 @@ namespace Centipede
                 score += player.updateProj(level.mushrooms);
             if (kb.IsKeyDown(Keys.I) && kbO.IsKeyDown(Keys.I))
                 gameOver = true;
+                score += player.updateProj(level.mushrooms,spider);
 
             
 
@@ -165,12 +174,22 @@ namespace Centipede
                 if(c.size() == 0)
                 {
                     centipedes.Remove(c);
+                }else
+                {
+                    c.Update();
                 }
-                c.Update();
             }
 
             player.changeColor(level.backgroundColor);
             kbO = kb;
+            if(spider.visible())
+                spider.Update();
+
+            if(!spider.visible()&&Globals.rng.Next(1,250)==1)//respawns spider after a random time
+            {
+                spider = new Spider(new Texture2D[] { Content.Load<Texture2D>("spider0"), Content.Load<Texture2D>("spider1") },
+                    GraphicsDevice.Viewport.Height - (Player.top * 2), GraphicsDevice.Viewport.Height - 20, level.backgroundColor, Globals.rng.Next(1, 3));
+            }
             base.Update(gameTime);
         }
 
@@ -198,15 +217,25 @@ namespace Centipede
                     return;
                 }
 
-                player.draw(spriteBatch, gameTime);
-                for (int x = 0; x < level.mushrooms.GetLength(0); x++)
+            player.draw(spriteBatch, gameTime);
+            for (int x = 0; x < level.mushrooms.GetLength(0); x++)
+            {
+                for (int y = 0; y < level.mushrooms.GetLength(0); y++)
                 {
-                    for (int y = 0; y < level.mushrooms.GetLength(0); y++)
-                    {
-                        level.mushrooms[x, y].Draw(spriteBatch, gameTime);
-                    }
+                    level.mushrooms[x, y].Draw(spriteBatch, gameTime); 
                 }
+            }
+            if (spider.visible())
+                spider.Draw(spriteBatch, gameTime);
 
+            spriteBatch.DrawString(font1, "High Score: " + (score > highScore ? score : highScore), new Vector2(0, 0), Color.White);
+            spriteBatch.DrawString(font1, "Score: " + score, new Vector2(200, 0), Color.White);
+            spriteBatch.DrawString(font1, "Level: " + visualLevel, new Vector2(450, 0), Color.White);
+
+            foreach (Centipede c in centipedes)
+            {
+                c.Draw(spriteBatch,gameTime);
+            }
                 spriteBatch.DrawString(font1, "Score: " + score, new Vector2(0, 0), Color.White);
                 spriteBatch.DrawString(font1, "Level: " + visualLevel, new Vector2(450, 0), Color.White);
             }
@@ -226,6 +255,21 @@ namespace Centipede
         public void updateLevel() {
             level = new Level(level.backgroundColor, visualLevel);
             visualLevel += 1;
+        }
+
+        public int getHighScore() {
+            if (File.Exists("high-score.txt")) {
+                string content = File.ReadAllText("high-score.txt");
+                return int.Parse(content);
+            }
+
+            // We don't have a high score
+            return 0;
+        }
+
+        public void setHighScore(int newScore) {
+            // Make the file and set the score
+            File.WriteAllText("high-score.txt", score.ToString());
         }
 
         public bool Collision(Player pc, int direction) {
