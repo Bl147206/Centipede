@@ -163,7 +163,6 @@ namespace Centipede
                 score += player.updateProj(level.mushrooms);
             if (kb.IsKeyDown(Keys.I) && kbO.IsKeyDown(Keys.I))
                 gameOver = true;
-                score += player.updateProj(level.mushrooms,spider);
 
             
 
@@ -228,6 +227,11 @@ namespace Centipede
             if (spider.visible())
                 spider.Draw(spriteBatch, gameTime);
 
+                spriteBatch.DrawString(font1, "Score: " + score, new Vector2(0, 0), Color.White);
+                spriteBatch.DrawString(font1, "Level: " + visualLevel, new Vector2(450, 0), Color.White);
+            }
+            else
+                spriteBatch.DrawString(font1, "Game Over", new Vector2(250, 300), Color.White);
             spriteBatch.DrawString(font1, "High Score: " + (score > highScore ? score : highScore), new Vector2(0, 0), Color.White);
             spriteBatch.DrawString(font1, "Score: " + score, new Vector2(200, 0), Color.White);
             spriteBatch.DrawString(font1, "Level: " + visualLevel, new Vector2(450, 0), Color.White);
@@ -236,11 +240,6 @@ namespace Centipede
             {
                 c.Draw(spriteBatch,gameTime);
             }
-                spriteBatch.DrawString(font1, "Score: " + score, new Vector2(0, 0), Color.White);
-                spriteBatch.DrawString(font1, "Level: " + visualLevel, new Vector2(450, 0), Color.White);
-            }
-            else
-                spriteBatch.DrawString(font1, "Game Over", new Vector2(250, 300), Color.White);
             spriteBatch.End();
 
 
