@@ -21,12 +21,17 @@ namespace Centipede
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        SpriteFont font1;
         int score;
         LinkedList<Centipede> centipedes;
         Player player;
         KeyboardState kb;
         KeyboardState kbO;
         Level level;
+        int visualLevel;
+        SpriteFont font;
+        SpriteFont titleFont;
+        bool hasGameStarted = false;
 
         public Game1()
         {
@@ -49,15 +54,14 @@ namespace Centipede
             // TODO: Add your initialization logic here
             kbO = Keyboard.GetState();
             score = 0;
-            level = new Level();
+            visualLevel = 1;
             centipedes = new LinkedList<Centipede>();
 
-
-            updateLevel();
+            level = new Level(Color.White);
+            
 
             centipedes.AddFirst(new Centipede(10, 2, 0, GraphicsDevice.Viewport.Width, 100, GraphicsDevice.Viewport.Height - 40));
-
-            level = new Level();
+            
 
             base.Initialize();
         }
@@ -70,8 +74,6 @@ namespace Centipede
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            level.initialize();
-            level.mushroomInit();
             player = new Player(null, null, new Rectangle(0, GraphicsDevice.Viewport.Height - 20, 20, 20),
             GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, level.backgroundColor);
             player.setTex(Content.Load<Texture2D>("playerSprite"));
@@ -79,17 +81,12 @@ namespace Centipede
             Globals.mushroom0 = Content.Load<Texture2D>("mushroom0");
             Globals.mushroom1 = Content.Load<Texture2D>("mushroom1");
             Globals.mushroom2 = Content.Load<Texture2D>("mushroom2");
+            font = Content.Load<SpriteFont>("SpriteFont1");
+            titleFont = Content.Load<SpriteFont>("SpriteFont2");
 
-            //temp code testing centipede
-            Texture2D[] centipedeTex = new Texture2D[8];
-            for(int i = 0; i < centipedeTex.Length; i++)
-            {
-                centipedeTex[i] = Content.Load<Texture2D>("graphicsTest");
-            }
-
-            centipedes.ElementAt(0).setTextures(centipedeTex, centipedeTex);
 
             // TODO: use this.Content to load your game content here
+            font1 = this.Content.Load<SpriteFont>("SpriteFont1");
 
         }
 
@@ -114,7 +111,13 @@ namespace Centipede
                 this.Exit();
             kb = Keyboard.GetState();
 
-            // TODO: Add your update logic here
+            if (!hasGameStarted) {
+                if (kb.IsKeyDown(Keys.Enter) && !kbO.IsKeyDown(Keys.Enter)) {
+                    hasGameStarted = true;
+                }
+
+                return;
+            }
 
             if (kb.IsKeyDown(Keys.LeftAlt) && !kbO.IsKeyDown(Keys.LeftAlt))
                 updateLevel();//This is to test what you are working on in multiple levels. (Secret skip button)
@@ -175,6 +178,20 @@ namespace Centipede
         {
             GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
+
+            // If the game hasn't started yet, lets show them the title screen.
+            if (!hasGameStarted) {
+
+                spriteBatch.DrawString(titleFont, "Centipede", new Vector2(125, 100), Color.White);
+                spriteBatch.DrawString(font, "Move around with W, A, S, and D", new Vector2(125, 300), Color.White);
+                spriteBatch.DrawString(font, "Press Spacebar to shoot mushrooms and the Centipede!", new Vector2(25, 400), Color.White);
+                spriteBatch.DrawString(font, "Press Enter to start!", new Vector2(175, 500), Color.White);
+
+                // Ensure that we end the sprite thing as well.
+                spriteBatch.End();
+                return;
+            }
+
             player.draw(spriteBatch, gameTime);
             for (int x = 0; x < level.mushrooms.GetLength(0); x++)
             {
@@ -188,18 +205,20 @@ namespace Centipede
             {
                 c.Draw(spriteBatch,gameTime);
             }
-
             spriteBatch.End();
 
 
             // TODO: Add your drawing code here
+            
+
 
             base.Draw(gameTime);
         }
 
         // TODO: Once we introduce Centipede speed, also update that here as well
         public void updateLevel() {
-            level = new Level(level.id);
+            level = new Level(level.backgroundColor, visualLevel);
+            visualLevel += 1;
         }
 
         public bool Collision(Player pc, int direction) {
@@ -228,6 +247,13 @@ namespace Centipede
             bool final = check[direction];
             return final;
         }
+        public void reset()
+        {
+            visualLevel = 1;
+            level = new Level(Color.White);
+
+        }
+
     }
 
 }
