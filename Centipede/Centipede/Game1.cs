@@ -28,10 +28,12 @@ namespace Centipede
         KeyboardState kb;
         KeyboardState kbO;
         Level level;
+        int visualLevel;
         SpriteFont font;
         SpriteFont titleFont;
         bool hasGameStarted = false;
         public Spider spider;
+        int highScore;
 
         public Game1()
         {
@@ -54,10 +56,15 @@ namespace Centipede
             // TODO: Add your initialization logic here
             kbO = Keyboard.GetState();
             score = 0;
-            level = new Level();
+            highScore = getHighScore();
+            visualLevel = 1;
             centipedes = new LinkedList<Centipede>();
 
-            level = new Level();
+            level = new Level(Color.White);
+            
+
+            centipedes.AddFirst(new Centipede(10, 2, 0, GraphicsDevice.Viewport.Width, 100, GraphicsDevice.Viewport.Height - 40));
+            
 
             base.Initialize();
         }
@@ -70,8 +77,6 @@ namespace Centipede
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            level.initialize();
-            level.mushroomInit();
             player = new Player(null, null, new Rectangle(0, GraphicsDevice.Viewport.Height - 20, 20, 20),
             GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, level.backgroundColor);
             player.setTex(Content.Load<Texture2D>("playerSprite"));
@@ -158,8 +163,10 @@ namespace Centipede
                 if(c.size() == 0)
                 {
                     centipedes.Remove(c);
+                }else
+                {
+                    c.Update();
                 }
-                c.Update();
             }
 
             player.changeColor(level.backgroundColor);
@@ -202,14 +209,20 @@ namespace Centipede
             {
                 for (int y = 0; y < level.mushrooms.GetLength(0); y++)
                 {
-                    level.mushrooms[x, y].Draw(spriteBatch, gameTime);
+                    level.mushrooms[x, y].Draw(spriteBatch, gameTime); 
                 }
             }
             if (spider.visible())
                 spider.Draw(spriteBatch, gameTime);
 
-            spriteBatch.DrawString(font1, "Score: " + score, new Vector2(0, 0), Color.White);
-            spriteBatch.DrawString(font1, "Level: " + level.id, new Vector2(500, 0), Color.White);
+            spriteBatch.DrawString(font1, "High Score: " + (score > highScore ? score : highScore), new Vector2(0, 0), Color.White);
+            spriteBatch.DrawString(font1, "Score: " + score, new Vector2(200, 0), Color.White);
+            spriteBatch.DrawString(font1, "Level: " + visualLevel, new Vector2(450, 0), Color.White);
+
+            foreach (Centipede c in centipedes)
+            {
+                c.Draw(spriteBatch,gameTime);
+            }
             spriteBatch.End();
 
 
@@ -222,7 +235,23 @@ namespace Centipede
 
         // TODO: Once we introduce Centipede speed, also update that here as well
         public void updateLevel() {
-            level = new Level(level.id);
+            level = new Level(level.backgroundColor, visualLevel);
+            visualLevel += 1;
+        }
+
+        public int getHighScore() {
+            if (File.Exists("high-score.txt")) {
+                string content = File.ReadAllText("high-score.txt");
+                return int.Parse(content);
+            }
+
+            // We don't have a high score
+            return 0;
+        }
+
+        public void setHighScore(int newScore) {
+            // Make the file and set the score
+            File.WriteAllText("high-score.txt", score.ToString());
         }
 
         public bool Collision(Player pc, int direction) {
@@ -251,6 +280,13 @@ namespace Centipede
             bool final = check[direction];
             return final;
         }
+        public void reset()
+        {
+            visualLevel = 1;
+            level = new Level(Color.White);
+
+        }
+
     }
 
 }
