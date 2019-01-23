@@ -32,6 +32,6 @@ namespace Centipede {
         public static Texture2D mushroom2;
 
         //This is the max level reachable
-        public static int levelCap;
+        public static int levelCap = 30;
     }
 }

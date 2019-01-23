@@ -17,17 +17,24 @@ namespace Centipede {
         LinkedList<Centipede> centipedes;
         public Color backgroundColor;
 
-        public Level(int previousId = 0) {
-            initialize(previousId);
+        public Level(Color backgroundColor, int previousId = 0) {
+            // We assign white as the default, but it won't actually be white
+            initialize(backgroundColor, previousId);
         }
 
-        public void initialize(int previousId = 0) {
+        public void initialize(Color previousBackground, int previousId = 0) {
             id = previousId + 1;
             mushrooms = new Mushroom[30, 30];
 
+            if (id > Globals.levelCap) {
+                id = Globals.levelCap;
+            }
 
+            // Ensure we didn't just use this color
+            do {
+                backgroundColor = Globals.backgroundColors[Globals.rng.Next(Globals.backgroundColors.Length)];
+            } while (backgroundColor == previousBackground);
 
-            backgroundColor = Globals.backgroundColors[id % Globals.backgroundColors.Length];
             mushroomInit();
         }
 

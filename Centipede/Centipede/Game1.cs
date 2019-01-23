@@ -28,6 +28,7 @@ namespace Centipede
         KeyboardState kb;
         KeyboardState kbO;
         Level level;
+        int visualLevel;
         SpriteFont font;
         SpriteFont titleFont;
         bool hasGameStarted = false;
@@ -53,10 +54,10 @@ namespace Centipede
             // TODO: Add your initialization logic here
             kbO = Keyboard.GetState();
             score = 0;
-            level = new Level();
+            visualLevel = 1;
             centipedes = new LinkedList<Centipede>();
 
-            level = new Level();
+            level = new Level(Color.White);
 
             base.Initialize();
         }
@@ -69,8 +70,6 @@ namespace Centipede
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            level.initialize();
-            level.mushroomInit();
             player = new Player(null, null, new Rectangle(0, GraphicsDevice.Viewport.Height - 20, 20, 20),
             GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, level.backgroundColor);
             player.setTex(Content.Load<Texture2D>("playerSprite"));
@@ -209,7 +208,8 @@ namespace Centipede
 
         // TODO: Once we introduce Centipede speed, also update that here as well
         public void updateLevel() {
-            level = new Level(level.id);
+            level = new Level(level.backgroundColor, visualLevel);
+            visualLevel += 1;
         }
 
         public bool Collision(Player pc, int direction) {
