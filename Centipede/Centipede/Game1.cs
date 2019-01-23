@@ -32,6 +32,7 @@ namespace Centipede
         SpriteFont font;
         SpriteFont titleFont;
         bool hasGameStarted = false;
+        int highScore;
 
         public Game1()
         {
@@ -54,6 +55,7 @@ namespace Centipede
             // TODO: Add your initialization logic here
             kbO = Keyboard.GetState();
             score = 0;
+            highScore = getHighScore();
             visualLevel = 1;
             centipedes = new LinkedList<Centipede>();
 
@@ -197,9 +199,13 @@ namespace Centipede
             {
                 for (int y = 0; y < level.mushrooms.GetLength(0); y++)
                 {
-                    level.mushrooms[x, y].Draw(spriteBatch, gameTime);
+                    level.mushrooms[x, y].Draw(spriteBatch, gameTime); 
                 }
             }
+
+            spriteBatch.DrawString(font1, "High Score: " + (score > highScore ? score : highScore), new Vector2(0, 0), Color.White);
+            spriteBatch.DrawString(font1, "Score: " + score, new Vector2(200, 0), Color.White);
+            spriteBatch.DrawString(font1, "Level: " + visualLevel, new Vector2(450, 0), Color.White);
 
             foreach (Centipede c in centipedes)
             {
@@ -219,6 +225,21 @@ namespace Centipede
         public void updateLevel() {
             level = new Level(level.backgroundColor, visualLevel);
             visualLevel += 1;
+        }
+
+        public int getHighScore() {
+            if (File.Exists("high-score.txt")) {
+                string content = File.ReadAllText("high-score.txt");
+                return int.Parse(content);
+            }
+
+            // We don't have a high score
+            return 0;
+        }
+
+        public void setHighScore(int newScore) {
+            // Make the file and set the score
+            File.WriteAllText("high-score.txt", score.ToString());
         }
 
         public bool Collision(Player pc, int direction) {
