@@ -31,6 +31,7 @@ namespace Centipede
         SpriteFont font;
         SpriteFont titleFont;
         bool hasGameStarted = false;
+        public Spider spider;
 
         public Game1()
         {
@@ -80,6 +81,8 @@ namespace Centipede
             Globals.mushroom2 = Content.Load<Texture2D>("mushroom2");
             font = Content.Load<SpriteFont>("SpriteFont1");
             titleFont = Content.Load<SpriteFont>("SpriteFont2");
+
+            spider = new Spider(new Texture2D[] {Content.Load<Texture2D>("spider0"),Content.Load<Texture2D>("spider1") },GraphicsDevice.Viewport.Height-(Player.top*2),GraphicsDevice.Viewport.Height-20,level.backgroundColor,Globals.rng.Next(1,3));
 
             // TODO: use this.Content to load your game content here
             font1 = this.Content.Load<SpriteFont>("SpriteFont1");
@@ -144,7 +147,7 @@ namespace Centipede
                 player.fire();
 
             if (player.isFiring)
-                score += player.updateProj(level.mushrooms);
+                score += player.updateProj(level.mushrooms,spider);
 
             
 
@@ -161,6 +164,14 @@ namespace Centipede
 
             player.changeColor(level.backgroundColor);
             kbO = kb;
+            if(spider.visible())
+                spider.Update();
+
+            if(!spider.visible()&&Globals.rng.Next(1,250)==1)//respawns spider after a random time
+            {
+                spider = new Spider(new Texture2D[] { Content.Load<Texture2D>("spider0"), Content.Load<Texture2D>("spider1") },
+                    GraphicsDevice.Viewport.Height - (Player.top * 2), GraphicsDevice.Viewport.Height - 20, level.backgroundColor, Globals.rng.Next(1, 3));
+            }
             base.Update(gameTime);
         }
 
@@ -194,6 +205,8 @@ namespace Centipede
                     level.mushrooms[x, y].Draw(spriteBatch, gameTime);
                 }
             }
+            if (spider.visible())
+                spider.Draw(spriteBatch, gameTime);
 
             spriteBatch.DrawString(font1, "Score: " + score, new Vector2(0, 0), Color.White);
             spriteBatch.DrawString(font1, "Level: " + level.id, new Vector2(500, 0), Color.White);

@@ -10,7 +10,7 @@ namespace Centipede
     {
 
         //top measured in pixels the ship can travel above the bottum of the screen
-        const int top = 100;
+        public const int top = 100;
 
         public int speedY = 3, speedX = 3, rightEdge = 600, bottomEdge = 640;
 
@@ -126,7 +126,7 @@ namespace Centipede
             pColor = newColor;
         }
 
-        public int updateProj(Mushroom[,] mushrooms)
+        public int updateProj(Mushroom[,] mushrooms,Spider spider)
         {
             proj.Y-=10;
             if (proj.Y < 0)
@@ -140,8 +140,15 @@ namespace Centipede
                         return 1;
                 }
             }
+            if(proj.Intersects(spider.getLoc())&&spider.visible())
+            {
+                isFiring = false;
+                return spider.hit();
+            }
             return 0;
         }
+
+
 
         //draw method
 

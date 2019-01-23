@@ -24,7 +24,7 @@ namespace Centipede {
         public void initialize(int previousId = 0) {
             id = previousId + 1;
             mushrooms = new Mushroom[30, 30];
-
+           
 
 
             backgroundColor = Globals.backgroundColors[id % Globals.backgroundColors.Length];
