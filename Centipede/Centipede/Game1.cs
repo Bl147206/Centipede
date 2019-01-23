@@ -195,7 +195,7 @@ namespace Centipede
             }
 
             spriteBatch.DrawString(font1, "Score: " + score, new Vector2(0, 0), Color.White);
-            spriteBatch.DrawString(font1, "Level: " + level.id, new Vector2(500, 0), Color.White);
+            spriteBatch.DrawString(font1, "Level: " + visualLevel, new Vector2(450, 0), Color.White);
             spriteBatch.End();
 
 
