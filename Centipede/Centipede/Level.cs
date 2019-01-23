@@ -37,7 +37,6 @@ namespace Centipede {
                     mushrooms[x, y] = new Mushroom(new Rectangle(x * 20, y * 20 + 40, 20, 20),backgroundColor);
                 }
             }
-
             while (checkArray() < id * 10) {
                 bool check = false;
                 int x = Globals.rng.Next(30);

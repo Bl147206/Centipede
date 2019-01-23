@@ -55,6 +55,7 @@ namespace Centipede
 
             updateLevel();
 
+            centipedes.AddFirst(new Centipede(10, 2, 0, GraphicsDevice.Viewport.Width, 100, GraphicsDevice.Viewport.Height - 40));
 
             level = new Level();
 
@@ -79,6 +80,14 @@ namespace Centipede
             Globals.mushroom1 = Content.Load<Texture2D>("mushroom1");
             Globals.mushroom2 = Content.Load<Texture2D>("mushroom2");
 
+            //temp code testing centipede
+            Texture2D[] centipedeTex = new Texture2D[8];
+            for(int i = 0; i < centipedeTex.Length; i++)
+            {
+                centipedeTex[i] = Content.Load<Texture2D>("graphicsTest");
+            }
+
+            centipedes.ElementAt(0).setTextures(centipedeTex, centipedeTex);
 
             // TODO: use this.Content to load your game content here
 
@@ -147,8 +156,10 @@ namespace Centipede
                 if(c.size() == 0)
                 {
                     centipedes.Remove(c);
+                }else
+                {
+                    c.Update();
                 }
-                c.Update();
             }
 
             player.changeColor(level.backgroundColor);
@@ -172,6 +183,12 @@ namespace Centipede
                     level.mushrooms[x, y].Draw(spriteBatch, gameTime);
                 }
             }
+
+            foreach (Centipede c in centipedes)
+            {
+                c.Draw(spriteBatch,gameTime);
+            }
+
             spriteBatch.End();
 
 

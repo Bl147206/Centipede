@@ -10,7 +10,7 @@ namespace Centipede
     {
 
         //top measured in pixels the ship can travel above the bottum of the screen
-        const int top = 100;
+        public const int top = 100;
 
         public int speedY = 3, speedX = 3, rightEdge = 600, bottomEdge = 640;
 
