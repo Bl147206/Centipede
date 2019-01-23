@@ -60,6 +60,10 @@ namespace Centipede
             centipedes = new LinkedList<Centipede>();
 
             level = new Level(Color.White);
+            
+
+            centipedes.AddFirst(new Centipede(10, 2, 0, GraphicsDevice.Viewport.Width, 100, GraphicsDevice.Viewport.Height - 40));
+            
 
             base.Initialize();
         }
@@ -81,6 +85,7 @@ namespace Centipede
             Globals.mushroom2 = Content.Load<Texture2D>("mushroom2");
             font = Content.Load<SpriteFont>("SpriteFont1");
             titleFont = Content.Load<SpriteFont>("SpriteFont2");
+
 
             // TODO: use this.Content to load your game content here
             font1 = this.Content.Load<SpriteFont>("SpriteFont1");
@@ -156,8 +161,10 @@ namespace Centipede
                 if(c.size() == 0)
                 {
                     centipedes.Remove(c);
+                }else
+                {
+                    c.Update();
                 }
-                c.Update();
             }
 
             player.changeColor(level.backgroundColor);
@@ -196,9 +203,10 @@ namespace Centipede
                 }
             }
 
-            spriteBatch.DrawString(font1, "High Score: " + (score > highScore ? score : highScore), new Vector2(0, 0), Color.White);
-            spriteBatch.DrawString(font1, "Score: " + score, new Vector2(200, 0), Color.White);
-            spriteBatch.DrawString(font1, "Level: " + visualLevel, new Vector2(450, 0), Color.White);
+            foreach (Centipede c in centipedes)
+            {
+                c.Draw(spriteBatch,gameTime);
+            }
             spriteBatch.End();
 
 
@@ -256,6 +264,13 @@ namespace Centipede
             bool final = check[direction];
             return final;
         }
+        public void reset()
+        {
+            visualLevel = 1;
+            level = new Level(Color.White);
+
+        }
+
     }
 
 }
