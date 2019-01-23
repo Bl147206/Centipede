@@ -21,6 +21,7 @@ namespace Centipede
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        SpriteFont font1;
         int score;
         LinkedList<Centipede> centipedes;
         Player player;
@@ -81,6 +82,7 @@ namespace Centipede
 
 
             // TODO: use this.Content to load your game content here
+            font1 = this.Content.Load<SpriteFont>("SpriteFont1");
 
         }
 
@@ -172,10 +174,15 @@ namespace Centipede
                     level.mushrooms[x, y].Draw(spriteBatch, gameTime);
                 }
             }
+
+            spriteBatch.DrawString(font1, "Score: " + score, new Vector2(0, 0), Color.White);
+            spriteBatch.DrawString(font1, "Level: " + level.id, new Vector2(500, 0), Color.White);
             spriteBatch.End();
 
 
             // TODO: Add your drawing code here
+            
+
 
             base.Draw(gameTime);
         }
