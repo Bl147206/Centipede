@@ -48,7 +48,6 @@ namespace Centipede
 
             loc.X += (int)velocity.X;
             loc.Y -= (int)velocity.Y;
-            Console.WriteLine(loc.X);
             if (loc.Y > botBound || loc.Y < topBound)
             {
                 velocity.Y *= -1;

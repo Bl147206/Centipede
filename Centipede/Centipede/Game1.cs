@@ -63,7 +63,7 @@ namespace Centipede
             level = new Level(Color.White);
             
 
-            centipedes.AddFirst(new Centipede(10, 15, 0, GraphicsDevice.Viewport.Width, 20, GraphicsDevice.Viewport.Height - 40));
+            centipedes.AddFirst(new Centipede(10, 5, 0, GraphicsDevice.Viewport.Width, 20, GraphicsDevice.Viewport.Height - 40));
             
 
             base.Initialize();
@@ -183,9 +183,13 @@ namespace Centipede
                 if(c.size() == 0)
                 {
                     centipedes.Remove(c);
-                }else
+                }
+                else
                 {
-                    c.Update();
+                    if (centipedeCollision(c))
+                    {//if a collision does not occur the update happens
+                        c.Update();
+                    }
                 }
             }
 
@@ -282,6 +286,31 @@ namespace Centipede
         public void setHighScore(int newScore) {
             // Make the file and set the score
             File.WriteAllText("high-score.txt", score.ToString());
+        }
+
+        public bool centipedeCollision(Centipede centipede)
+        {
+            CentipedeSegment head = centipede.body[0];
+            foreach(Mushroom m in level.mushrooms)
+            {
+                if (head.position.Intersects(m.loc) && m.visible)
+                {
+                    Console.WriteLine("test");
+                    if(head.velocity > 0)
+                    {
+                        centipede.addTurn(new Vector2(m.loc.X - 20, m.loc.Y));
+                        centipede.body[0].position.X -= head.velocity;
+                    }
+                    else if(head.velocity < 0)
+                    {
+                        centipede.addTurn(new Vector2(m.loc.X + 20, m.loc.Y));
+                        centipede.body[0].position.X -= head.velocity;
+                    }
+                    centipede.body[0].turn();
+                    return false;
+                }
+            }
+            return true;
         }
 
         public bool Collision(Player pc, int direction) {
