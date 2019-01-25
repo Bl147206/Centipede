@@ -172,8 +172,8 @@ namespace Centipede
 
             if (player.isFiring)
                 score += player.updateProj(level.mushrooms, spider);
-            if (kb.IsKeyDown(Keys.I) && kbO.IsKeyDown(Keys.I))
-                gameOver = true;
+            //if (kb.IsKeyDown(Keys.I) && kbO.IsKeyDown(Keys.I))
+            //    gameOver = true;
 
             
 
