@@ -231,7 +231,7 @@ namespace Centipede
             if (spider.loc.Intersects(player.getRec()))
             {
                 gameOver = true;
-                setHighScore(score);
+                
             }
             foreach (Centipede c in centipedes)
             {
@@ -241,7 +241,7 @@ namespace Centipede
                         if (c.body[x].position.Intersects(player.getRec()))
                         {
                             gameOver = true;
-                            setHighScore(score);
+                            
                         }
                 }
             }
@@ -350,7 +350,8 @@ namespace Centipede
                 if (c.body[segment].position.Intersects(player.proj))
                 {
                     score += 1;
-                    level.mushrooms[c.body[segment].position.X / 20, (c.body[segment].position.Y - 40) / 20].visible = true;
+                    if(c.body.Length>1)
+                        level.mushrooms[c.body[segment].position.X / 20, (c.body[segment].position.Y - 40) / 20].visible = true;
                     newCentipede(c.hit(segment));
                     return false;
                 }
@@ -413,6 +414,12 @@ namespace Centipede
             visualLevel = 1;
             level = new Level(Color.White);
             hasGameStarted = false;
+            if (score > highScore)
+            {
+                setHighScore(score);
+                highScore = score;
+            }
+            score = 0;
 
         }
 
