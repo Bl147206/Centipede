@@ -187,9 +187,9 @@ namespace Centipede
                 }
                 else
                 {
-                    if (centipedeCollision(c))
+                    if (centipedeCollision(c, gameTime))
                     {//if a collision does not occur the update happens
-                        c.Update();
+                        c.Update(gameTime);
                     }
                 }
             }
@@ -289,22 +289,21 @@ namespace Centipede
             File.WriteAllText("high-score.txt", score.ToString());
         }
 
-        public bool centipedeCollision(Centipede centipede)
-        {
+        public bool centipedeCollision(Centipede centipede, GameTime gameTime)
+        {//This works I think but is kinda weird and finicky on relative positioning
             CentipedeSegment head = centipede.body[0];
             foreach(Mushroom m in level.mushrooms)
             {
-                if (head.position.Intersects(m.loc) && m.visible)
+                if (!centipede.recentBounce && head.position.Intersects(m.loc) && m.visible)
                 {
-                    Console.WriteLine("test");
                     if(head.velocity > 0)
                     {
-                        centipede.addTurn(new Vector2(m.loc.X - 20, m.loc.Y));
+                        centipede.addTurn(new Vector2(m.loc.X - 20, m.loc.Y), gameTime);
                         centipede.body[0].position.X -= head.velocity;
                     }
                     else if(head.velocity < 0)
                     {
-                        centipede.addTurn(new Vector2(m.loc.X + 20, m.loc.Y));
+                        centipede.addTurn(new Vector2(m.loc.X + 20, m.loc.Y), gameTime);
                         centipede.body[0].position.X -= head.velocity;
                     }
                     centipede.body[0].turn();
