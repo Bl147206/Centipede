@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Centipede.cs" />
+    <Compile Include="CentipedeSegment.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="Mushroom.cs" />
     <Compile Include="Player.cs" />
