@@ -15,7 +15,7 @@ namespace Centipede
     public class Spider
     {
         Texture2D[] texts;
-        Rectangle loc;
+        public Rectangle loc;
         int topBound, botBound;
         Vector2 velocity;
         Color color;

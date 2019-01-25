@@ -135,14 +135,14 @@ namespace Centipede
 
                 return;
             }
-            //if (gameOver)
-            //{
-            //    if (kb.IsKeyDown(Keys.Enter) && !kbO.IsKeyDown(Keys.Enter))
-            //    {
-            //        gameOver = false;
-            //        reset();
-            //    }
-            //}
+            if (gameOver)
+            {
+                if (kb.IsKeyDown(Keys.LeftShift) && !kbO.IsKeyDown(Keys.LeftShift))
+                {
+                    gameOver = false;
+                    reset();
+                }
+            }
 
             if (kb.IsKeyDown(Keys.LeftAlt) && !kbO.IsKeyDown(Keys.LeftAlt))
                 updateLevel();//This is to test what you are working on in multiple levels. (Secret skip button)
@@ -187,14 +187,12 @@ namespace Centipede
                     }
                 }
             }
-            //if (kb.IsKeyDown(Keys.I) && kbO.IsKeyDown(Keys.I))
-            //    gameOver = true;
 
-            
+
 
 
             //Centipede logic
-            for(int c = 0; c < centipedes.Count; c++)
+            for (int c = 0; c < centipedes.Count; c++)
             {
                 if(centipedes.ElementAt(c).size() == 0)
                 {
@@ -229,6 +227,24 @@ namespace Centipede
                 spider = new Spider(new Texture2D[] { Content.Load<Texture2D>("spider0"), Content.Load<Texture2D>("spider1") },
                     GraphicsDevice.Viewport.Height - (Player.top * 2), GraphicsDevice.Viewport.Height - 20, level.backgroundColor, Globals.rng.Next(1, 3));
             }
+
+            if (spider.loc.Intersects(player.getRec()))
+            {
+                gameOver = true;
+                setHighScore(score);
+            }
+            foreach (Centipede c in centipedes)
+            {
+                for(int x = 0; x<c.body.Length; x++)
+                {
+                    if(c.body[x]!=null)
+                        if (c.body[x].position.Intersects(player.getRec()))
+                        {
+                            gameOver = true;
+                            setHighScore(score);
+                        }
+                }
+            }
             base.Update(gameTime);
         }
 
@@ -240,7 +256,7 @@ namespace Centipede
         {
             GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
-            if (true)
+            if (!gameOver)
             {
                 // If the game hasn't started yet, lets show them the title screen.
                 if (!hasGameStarted)
@@ -256,30 +272,31 @@ namespace Centipede
                     return;
                 }
 
-            player.draw(spriteBatch, gameTime);
-            for (int x = 0; x < level.mushrooms.GetLength(0); x++)
-            {
-                for (int y = 0; y < level.mushrooms.GetLength(0); y++)
+                player.draw(spriteBatch, gameTime);
+                for (int x = 0; x < level.mushrooms.GetLength(0); x++)
                 {
-                    level.mushrooms[x, y].Draw(spriteBatch, gameTime); 
+                    for (int y = 0; y < level.mushrooms.GetLength(0); y++)
+                    {
+                        level.mushrooms[x, y].Draw(spriteBatch, gameTime);
+                    }
                 }
-            }
-            if (spider.visible())
-                spider.Draw(spriteBatch, gameTime);
+                if (spider.visible())
+                    spider.Draw(spriteBatch, gameTime);
 
-                spriteBatch.DrawString(font1, "Score: " + score, new Vector2(0, 0), Color.White);
+                //spriteBatch.DrawString(font1, "Score: " + score, new Vector2(0, 0), Color.White);
                 spriteBatch.DrawString(font1, "Level: " + visualLevel, new Vector2(450, 0), Color.White);
+                spriteBatch.DrawString(font1, "High Score: " + (score > highScore ? score : highScore), new Vector2(0, 0), Color.White);
+                spriteBatch.DrawString(font1, "Score: " + score, new Vector2(200, 0), Color.White);
+                foreach (Centipede c in centipedes)
+                {
+                    c.Draw(spriteBatch, gameTime);
+                }
             }
             else
                 spriteBatch.DrawString(font1, "Game Over", new Vector2(250, 300), Color.White);
-            spriteBatch.DrawString(font1, "High Score: " + (score > highScore ? score : highScore), new Vector2(0, 0), Color.White);
-            spriteBatch.DrawString(font1, "Score: " + score, new Vector2(200, 0), Color.White);
-            spriteBatch.DrawString(font1, "Level: " + visualLevel, new Vector2(450, 0), Color.White);
 
-            foreach (Centipede c in centipedes)
-            {
-                c.Draw(spriteBatch,gameTime);
-            }
+
+
 
             spriteBatch.End();
 
@@ -295,6 +312,8 @@ namespace Centipede
         public void updateLevel() {
             level = new Level(level.backgroundColor, visualLevel);
             visualLevel += 1;
+            centipedes = new LinkedList<Centipede>();
+            newCentipede();
         }
 
         public int getHighScore() {
