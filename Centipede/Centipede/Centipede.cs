@@ -14,35 +14,34 @@ namespace Centipede
     class Centipede
     {
         
-        Rectangle[] body;
+        public CentipedeSegment[] body;
         Texture2D[] head;
         Texture2D[] bodyTex;
         int topBound, rightBound, bottomBound, leftBound, velocity, turningTime;
         //turning time is the number of updates the snake will be moving along the wall for
-        bool turning;
 
         //used for making new centipedes
         public Centipede(int length, int velocity, int left, int right, int top, int bottom)
         {
-            body = new Rectangle[length];
+            body = new CentipedeSegment[length];
             this.velocity = velocity;
             topBound = top;
             rightBound = right;
             bottomBound = bottom;
             leftBound = left;
             buildSnake();
-            turningTime = body[0].Width / Math.Abs(velocity);
+            turningTime = body[0].position.Width / Math.Abs(velocity);
         }
 
         //used when splitting centipedes
-        public Centipede(Rectangle[] body, int velocity, int left, int right, int top, int bottom) {
+        public Centipede(CentipedeSegment[] body, int velocity, int left, int right, int top, int bottom) {
             this.body = body;
             this.velocity = velocity;
             topBound = top;
             rightBound = right;
             bottomBound = bottom;
             leftBound = left;
-            turningTime = body[0].Width / Math.Abs(velocity);
+            turningTime = body[0].position.Width / Math.Abs(velocity);
         }
 
         public void setTextures(Texture2D[] h, Texture2D[] b)
@@ -53,69 +52,54 @@ namespace Centipede
 
         public void buildSnake()
         {
-            body[0] = new Rectangle(290,40,20,20);
+            body[0] = new CentipedeSegment(new Rectangle(290, 40, 20, 20), velocity);
+            body[0].entered = true;
         }
 
         public void Update()
         {
-            if (!turning)
+            for (int segment = 0; segment < body.Length; segment++)
             {
-                body[0].X += velocity;
-            }
-
-            //snakes follow one another
-            for (int segment = body.Length-1; segment > 0; segment--)
-            {
-                if(body[segment].Width == 0)
+                if(body[segment] == null && segment != 0)
                 {
-                    if(Math.Abs(body[segment-1].X) - 290 >= 20)
+                    if (body[segment - 1].pastSpawn())
                     {
-                        body[segment] = new Rectangle(290, 40, 20, 20);
+                        body[segment] = new CentipedeSegment(new Rectangle(290, 40, 20, 20), velocity);
+                        body[segment].entered = true;
                     }
+                    break;
                 }
                 else
                 {
-                    if (body[segment].X < leftBound || body[segment].X + body[segment].Width > rightBound)
+                    body[segment].update();
+                    if(body[segment].position.X < 0 || body[segment].position.X > rightBound - 20)
                     {
-                        velocity *= -1;
-                        body[segment].Y += Math.Abs(velocity);
-                    }else
-                    {
-                        body[segment].X += velocity;
+                        if (body[segment].position.Y + 20 > bottomBound || body[segment].position.Y < topBound)
+                        {
+                            body[segment].turnVeritcal();
+                        }
+                        else
+                        {
+                            body[segment].turn();
+                        }
                     }
                 }
             }
-
-            if (turning)
-            {
-                turningTime--;
-                turn();
-                if (turningTime == 0)
-                {
-                    turningTime = body[0].Width / Math.Abs(velocity);
-                    turning = false;
-                }
-            }
-
-        }
-
-        public void turn()
-        {
-            body[0].Y += Math.Abs(velocity);
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            spriteBatch.Draw(head[gameTime.ElapsedGameTime.Ticks%8], body[0], Color.Red);
+            spriteBatch.Draw(head[gameTime.ElapsedGameTime.Ticks%2], body[0].position, Color.Red);
             for (int i = 1; i < body.Length; i++)
             {
-                spriteBatch.Draw(bodyTex[gameTime.ElapsedGameTime.Ticks % 8], body[i], Color.White);
+                if(body[i] != null)
+                spriteBatch.Draw(bodyTex[gameTime.ElapsedGameTime.Ticks % 2], body[i].position, Color.White);
             }
         }
 
-        public Rectangle[] hit(int segment) {
-            Rectangle[] ret = new Rectangle[body.Length - segment];
-            Rectangle[] newBody = new Rectangle[segment];
+        public CentipedeSegment[] hit(int segment) {
+            CentipedeSegment[] ret = new CentipedeSegment[body.Length - segment];
+            CentipedeSegment[] newBody = new CentipedeSegment[segment];
             for (int index = 0; index < body.Length; index++) {
                 if (index < segment) {
                     newBody[index] = body[index];

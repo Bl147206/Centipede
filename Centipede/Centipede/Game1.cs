@@ -64,7 +64,7 @@ namespace Centipede
             level = new Level(Color.White);
             
 
-            centipedes.AddFirst(new Centipede(10, 2, 0, GraphicsDevice.Viewport.Width, 100, GraphicsDevice.Viewport.Height - 40));
+            centipedes.AddFirst(new Centipede(10, 15, 0, GraphicsDevice.Viewport.Width, 20, GraphicsDevice.Viewport.Height - 40));
             
 
             base.Initialize();
@@ -89,6 +89,16 @@ namespace Centipede
             titleFont = Content.Load<SpriteFont>("SpriteFont2");
 
             spider = new Spider(new Texture2D[] {Content.Load<Texture2D>("spider0"),Content.Load<Texture2D>("spider1") },GraphicsDevice.Viewport.Height-(Player.top*2),GraphicsDevice.Viewport.Height-20,level.backgroundColor,Globals.rng.Next(1,3));
+
+            Texture2D[] centTextBody = new Texture2D[2];
+            centTextBody[0] = Content.Load<Texture2D>("centbody0");
+            centTextBody[1] = Content.Load<Texture2D>("centbody1");
+
+            Texture2D[] centTextHead = new Texture2D[2];
+            centTextHead[0] = Content.Load<Texture2D>("centHead0");
+            centTextHead[1] = Content.Load<Texture2D>("centhead1");
+
+            centipedes.ElementAt(0).setTextures(centTextBody, centTextHead);
 
             // TODO: use this.Content to load your game content here
             font1 = this.Content.Load<SpriteFont>("SpriteFont1");
@@ -123,14 +133,14 @@ namespace Centipede
 
                 return;
             }
-            if (gameOver)
-            {
-                if (kb.IsKeyDown(Keys.Enter) && !kbO.IsKeyDown(Keys.Enter))
-                {
-                    gameOver = false;
-                    reset();
-                }
-            }
+            //if (gameOver)
+            //{
+            //    if (kb.IsKeyDown(Keys.Enter) && !kbO.IsKeyDown(Keys.Enter))
+            //    {
+            //        gameOver = false;
+            //        reset();
+            //    }
+            //}
 
             if (kb.IsKeyDown(Keys.LeftAlt) && !kbO.IsKeyDown(Keys.LeftAlt))
                 updateLevel();//This is to test what you are working on in multiple levels. (Secret skip button)
@@ -180,6 +190,8 @@ namespace Centipede
                 }
             }
 
+            
+
             player.changeColor(level.backgroundColor);
             kbO = kb;
             if(spider.visible())
@@ -201,7 +213,7 @@ namespace Centipede
         {
             GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
-            if (!gameOver)
+            if (true)
             {
                 // If the game hasn't started yet, lets show them the title screen.
                 if (!hasGameStarted)
@@ -241,6 +253,7 @@ namespace Centipede
             {
                 c.Draw(spriteBatch,gameTime);
             }
+
             spriteBatch.End();
 
 
