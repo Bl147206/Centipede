@@ -34,6 +34,7 @@ namespace Centipede
         bool hasGameStarted = false;
         public Spider spider;
         int highScore;
+        bool gameOver;
 
         public Game1()
         {
@@ -170,7 +171,7 @@ namespace Centipede
                 player.fire();
 
             if (player.isFiring)
-                score += player.updateProj(level.mushrooms,spider);
+                score += player.updateProj(level.mushrooms, spider);
             //if (kb.IsKeyDown(Keys.I) && kbO.IsKeyDown(Keys.I))
             //    gameOver = true;
 
