@@ -220,7 +220,7 @@ namespace Centipede
             player.changeColor(level.backgroundColor);
             kbO = kb;
             if(spider.visible())
-                spider.Update();
+                spider.Update(gameTime);
 
             if(!spider.visible()&&Globals.rng.Next(1,250)==1)//respawns spider after a random time
             {

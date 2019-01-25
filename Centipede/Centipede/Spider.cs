@@ -21,6 +21,7 @@ namespace Centipede
         Color color;
         int dir;//1 is left, 2 is right
         bool isVisible;
+        int aniFrame;
 
         public Spider(Texture2D[] texts, int topBound, int botBound, Color color, int direction)
         {
@@ -30,6 +31,7 @@ namespace Centipede
             dir = direction;
             this.color = color;
             isVisible = true;
+            aniFrame = 0;
 
             if (dir == 1)
             {
@@ -43,7 +45,7 @@ namespace Centipede
             }
         }
 
-        public void Update()
+        public void Update(GameTime gameTime)
         {
 
             loc.X += (int)velocity.X;
@@ -65,6 +67,11 @@ namespace Centipede
                 }
 
 
+            }
+            if(gameTime.TotalGameTime.Ticks%60==0)
+            {
+                aniFrame++;
+                aniFrame %= 2;
             }
             if (loc.X < -40 || loc.X > 600)
                 despawn();
@@ -94,7 +101,9 @@ namespace Centipede
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-                spriteBatch.Draw(texts[0], loc, color);
+            
+                spriteBatch.Draw(texts[aniFrame], loc, color);
+            
         }
 
         
