@@ -210,6 +210,7 @@ namespace Centipede
             if(centipedes.Count == 0)
             {
                 newCentipede();
+                updateLevel();
             }
 
             if (kb.IsKeyDown(Keys.P) && !kbO.IsKeyDown(Keys.P))
@@ -228,7 +229,7 @@ namespace Centipede
                     GraphicsDevice.Viewport.Height - (Player.top * 2), GraphicsDevice.Viewport.Height - 20, level.backgroundColor, Globals.rng.Next(1, 3));
             }
 
-            if (spider.loc.Intersects(player.getRec()))
+            if (spider.loc.Intersects(player.getRec())&&spider.visible())
             {
                 gameOver = true;
                 
@@ -411,7 +412,10 @@ namespace Centipede
         }
         public void reset()
         {
-            visualLevel = 1;
+            visualLevel = 1;          
+            centipedes = new LinkedList<Centipede>();
+            spider.despawn();
+            newCentipede();
             level = new Level(Color.White);
             hasGameStarted = false;
             if (score > highScore)
