@@ -41,7 +41,11 @@ namespace Centipede {
         public void mushroomInit() {
             for (int x = 0; x < mushrooms.GetLength(0); x++) {
                 for (int y = 0; y < mushrooms.GetLength(0); y++) {
-                    mushrooms[x, y] = new Mushroom(new Rectangle(x * 20, y * 20 + 40, 20, 20),backgroundColor);
+                    mushrooms[x, y] = new Mushroom(new Rectangle(x * 20, y * 20 + 80, 20, 20),backgroundColor);
+                    if (mushrooms[x, y].loc.X + mushrooms[x, y].loc.Width > 600 - mushrooms[x, y].loc.Width)
+                        mushrooms[x, y].loc.X -= 20;
+                    if(mushrooms[x,y].loc.X<20)
+                        mushrooms[x, y].loc.X += 20;
                 }
             }
             while (checkArray() < id * 10) {

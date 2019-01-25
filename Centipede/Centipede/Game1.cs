@@ -294,7 +294,7 @@ namespace Centipede
                 }
             }
             else
-                spriteBatch.DrawString(font1, "Game Over", new Vector2(250, 300), Color.White);
+                spriteBatch.DrawString(font1, "              Game Over\nPress Left Shift to Play Again!!!!!!!!", new Vector2(200, 300), Color.White);
 
 
 
