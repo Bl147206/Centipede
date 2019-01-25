@@ -35,6 +35,8 @@ namespace Centipede
         public Spider spider;
         int highScore;
         bool gameOver;
+        Texture2D[] centTextBody;
+        Texture2D[] centTextHead;
 
         public Game1()
         {
@@ -90,13 +92,13 @@ namespace Centipede
 
             spider = new Spider(new Texture2D[] {Content.Load<Texture2D>("spider0"),Content.Load<Texture2D>("spider1") },GraphicsDevice.Viewport.Height-(Player.top*2),GraphicsDevice.Viewport.Height-20,level.backgroundColor,Globals.rng.Next(1,3));
 
-            Texture2D[] centTextBody = new Texture2D[2];
+            centTextBody = new Texture2D[2];
             centTextBody[0] = Content.Load<Texture2D>("centbody0");
             centTextBody[1] = Content.Load<Texture2D>("centbody1");
 
-            Texture2D[] centTextHead = new Texture2D[2];
+            centTextHead = new Texture2D[2];
             centTextHead[0] = Content.Load<Texture2D>("centHead0");
-            centTextHead[1] = Content.Load<Texture2D>("centhead1");
+            centTextHead[1] = Content.Load<Texture2D>("centHead1");
 
             centipedes.ElementAt(0).setTextures(centTextBody, centTextHead);
 
@@ -171,30 +173,51 @@ namespace Centipede
                 player.fire();
 
             if (player.isFiring)
+            {
                 score += player.updateProj(level.mushrooms, spider);
+            }
+            if (player.isFiring)
+            {//having 2 is neccesary for the way centipedeproj works, do not combine it breaks shooting
+                for(int i = 0; i < centipedes.Count; i++)
+                {
+                    player.isFiring = centipedeProj(centipedes.ElementAt(i));
+                    if (!player.isFiring)
+                    {
+                        break;
+                    }
+                }
+            }
             //if (kb.IsKeyDown(Keys.I) && kbO.IsKeyDown(Keys.I))
             //    gameOver = true;
 
             
 
 
-            //Centipede cleaning
-            foreach(Centipede c in centipedes)
+            //Centipede logic
+            for(int c = 0; c < centipedes.Count; c++)
             {
-                if(c.size() == 0)
+                if(centipedes.ElementAt(c).size() == 0)
                 {
-                    centipedes.Remove(c);
+                    centipedes.Remove(centipedes.ElementAt(c--));
                 }
                 else
                 {
-                    if (centipedeCollision(c, gameTime))
+                    if (centipedeCollision(centipedes.ElementAt(c), gameTime))
                     {//if a collision does not occur the update happens
-                        c.Update(gameTime);
+                        centipedes.ElementAt(c).Update(gameTime);
                     }
                 }
             }
 
-            
+            if(centipedes.Count == 0)
+            {
+                newCentipede();
+            }
+
+            if (kb.IsKeyDown(Keys.P) && !kbO.IsKeyDown(Keys.P))
+            {
+                centipedes.ElementAt(0).hit(5);
+            }
 
             player.changeColor(level.backgroundColor);
             kbO = kb;
@@ -287,6 +310,33 @@ namespace Centipede
         public void setHighScore(int newScore) {
             // Make the file and set the score
             File.WriteAllText("high-score.txt", score.ToString());
+        }
+
+        public void newCentipede(CentipedeSegment[] cent)
+        {//creates and adds a new centipede when a split occurs
+            centipedes.AddFirst(new Centipede(cent, 5, 0, GraphicsDevice.Viewport.Width, 20, GraphicsDevice.Viewport.Height - 40));
+            centipedes.ElementAt(0).setTextures(centTextHead, centTextBody);
+        }
+
+        public void newCentipede()
+        {//used for spawning an entirely new centipede
+            centipedes.AddFirst(new Centipede(10, 5, 0, GraphicsDevice.Viewport.Width, 20, GraphicsDevice.Viewport.Height - 40));
+            centipedes.ElementAt(0).setTextures(centTextBody, centTextHead);
+        }
+
+        public bool centipedeProj(Centipede c)
+        {//calculates relationship between a speffic centipede and the ships projectile
+            for(int segment = 0; segment < c.body.Length; segment++)
+            {
+                if (c.body[segment].position.Intersects(player.proj))
+                {
+                    score += 1;
+                    level.mushrooms[c.body[segment].position.X / 20, (c.body[segment].position.Y - 40) / 20].visible = true;
+                    newCentipede(c.hit(segment));
+                    return false;
+                }
+            }
+            return true;
         }
 
         public bool centipedeCollision(Centipede centipede, GameTime gameTime)

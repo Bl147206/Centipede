@@ -17,7 +17,7 @@ namespace Centipede
         Texture2D playerTex;
         Rectangle playerRec;
         public bool isFiring;
-        Rectangle proj;
+        public Rectangle proj;
         Texture2D projTex;
         Color pColor;
 

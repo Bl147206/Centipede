@@ -13,7 +13,7 @@ namespace Centipede
     public class CentipedeSegment
     {
         public Rectangle position;
-        public int velocity, yDirection;
+        public int velocity, yDirection, frame;
 
         public CentipedeSegment(Rectangle position, int velocity)
         {
@@ -25,6 +25,7 @@ namespace Centipede
         public void update()
         {
             position.X += velocity;
+            frame++;
         }
 
         public void turn()
@@ -47,6 +48,18 @@ namespace Centipede
         public Vector2 origin()
         {//if time for rotations
             return new Vector2(10, 10);
+        }
+
+        public int animationFrame()
+        {
+            if(frame % 20 < 10)
+            {
+                return 0;
+            }
+            else
+            {
+                return 1;
+            }
         }
 
     }

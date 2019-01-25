@@ -17,7 +17,7 @@ namespace Centipede
         public CentipedeSegment[] body;
         Texture2D[] head;
         Texture2D[] bodyTex;
-        int topBound, rightBound, bottomBound, leftBound, velocity, turningTime, bounceTimer;
+        int topBound, rightBound, bottomBound, leftBound, velocity, bounceTimer;
         LinkedList<Vector2> turnPoints;
         LinkedList<long> removeTimers;
         public bool recentBounce;
@@ -36,7 +36,6 @@ namespace Centipede
             turnPoints = new LinkedList<Vector2>();
             removeTimers = new LinkedList<long>();
             buildSnake();
-            turningTime = body[0].position.Width / Math.Abs(velocity);
         }
 
         //used when splitting centipedes
@@ -46,10 +45,9 @@ namespace Centipede
             topBound = top;
             rightBound = right;
             bottomBound = bottom;
+            leftBound = left;
             turnPoints = new LinkedList<Vector2>();
             removeTimers = new LinkedList<long>();
-            leftBound = left;
-            turningTime = body[0].position.Width / Math.Abs(velocity);
         }
 
         public void setTextures(Texture2D[] h, Texture2D[] b)
@@ -72,6 +70,7 @@ namespace Centipede
                     if (body[segment - 1].pastSpawn())
                     {
                         body[segment] = new CentipedeSegment(new Rectangle(290, 40, 20, 20), velocity);
+                        body[segment].frame = body[segment - 1].frame + 7;
                     }
                     break;
                 }
@@ -128,31 +127,30 @@ namespace Centipede
         
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {//basic draw methods, add directions if time allows
-            spriteBatch.Draw(head[gameTime.ElapsedGameTime.Ticks%2], body[0].position, Color.Red);
+            spriteBatch.Draw(head[body[0].animationFrame()], body[0].position, Color.Red);
             for (int i = 1; i < body.Length; i++)
             {
                 if(body[i] != null)
-                spriteBatch.Draw(bodyTex[gameTime.ElapsedGameTime.Ticks % 2], body[i].position, Color.White);
+                spriteBatch.Draw(bodyTex[body[i].animationFrame()], body[i].position, Color.White);
             }
         }
 
         public CentipedeSegment[] hit(int segment)
         {//Splitting method for a hit. Not tested
-            CentipedeSegment[] ret = new CentipedeSegment[body.Length - segment];
+            CentipedeSegment[] ret = new CentipedeSegment[body.Length - (segment+1)];
             CentipedeSegment[] newBody = new CentipedeSegment[segment];
-            for (int index = 0; index < body.Length; index++)
+            for(int i = 0; i < body.Length; i++)
             {
-                if (index < segment) {
-                    newBody[index] = body[index];
+                if(i < newBody.Length)
+                {
+                    newBody[i] = body[i];
                 }
-                if (index > segment) {
-                    ret[index] = body[index];
+                if(i > newBody.Length)
+                {
+                    ret[i - (newBody.Length + 1)] = body[i]; 
                 }
             }
             body = newBody;
-            if (newBody.Length == 0) {
-                body = null;
-            }
             return ret;
         }
 
