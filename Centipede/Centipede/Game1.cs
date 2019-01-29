@@ -314,6 +314,7 @@ namespace Centipede
             level = new Level(level.backgroundColor, visualLevel);
             visualLevel += 1;
             centipedes = new LinkedList<Centipede>();
+            spider.despawn();
             newCentipede();
         }
 
@@ -346,17 +347,19 @@ namespace Centipede
 
         public bool centipedeProj(Centipede c)
         {//calculates relationship between a speffic centipede and the ships projectile
-            for(int segment = 0; segment < c.body.Length; segment++)
-            {
-                if (c.body[segment].position.Intersects(player.proj))
+            
+                for (int segment = 0; segment < c.body.Length; segment++)
                 {
-                    score += 1;
-                    if(c.body.Length>1)
-                        level.mushrooms[c.body[segment].position.X / 20, (c.body[segment].position.Y - 40) / 20].visible = true;
-                    newCentipede(c.hit(segment));
-                    return false;
+                    if (c.body[segment].position.Intersects(player.proj))
+                    {
+                        score += 1;
+                        if (c.body.Length > 1)
+                            level.mushrooms[(c.body[segment].position.X / 20)-1, ((c.body[segment].position.Y - 40) / 20)-2].visible = true;
+                        newCentipede(c.hit(segment));
+                        return false;
+                    }
                 }
-            }
+            
             return true;
         }
 
